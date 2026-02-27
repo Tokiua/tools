@@ -1,0 +1,67 @@
+:root {
+    --primary-purple: #7c3aed; /* Púrpura Accent */
+    --dark-black: #0a0a0a;
+    --light-gray: #f9fafb;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    background-color: white;
+    color: var(--dark-black);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+/* Efecto de Vidrio para el Header */
+.glass-header {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.8);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Tarjetas Estilo Desktop App  */
+.tool-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    transition: var(--transition);
+    background: white;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.tool-card:hover {
+    border-color: var(--primary-purple);
+    box-shadow: 0 20px 25px -5px rgba(124, 58, 237, 0.1);
+    transform: translateY(-5px);
+}
+
+/* Animación de entrada para las tarjetas */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-card {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+/* Botón de Descarga Principal */
+.btn-primary {
+    background: var(--dark-black);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    transition: var(--transition);
+    border: 2px solid transparent;
+}
+
+.btn-primary:hover {
+    background: var(--primary-purple);
+    transform: scale(1.05);
+}
