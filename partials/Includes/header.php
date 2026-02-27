@@ -87,9 +87,9 @@ $themeHex = isset($themeHex) ? $themeHex : '#000000'; // Color por defecto
                             <i class="fab fa-tiktok ml-2 text-black group-hover:text-purple-600"></i>
                             <span class="font-bold uppercase text-[10px] ml-1">TikTok Downloader</span>
                         </a>
-                        <a href="../facebook/index.php" class="flex items-center gap-3 p-3 hover:bg-blue-50 rounded-xl transition group text-slate-700">
-                             <i class="fab fa-facebook-f ml-2 text-[#1877F2]"></i>
-                            <span class="font-bold uppercase text-[10px] ml-1">Facebook Video</span>
+                        <a href="../image-converter/index.php" class="flex items-center gap-3 p-3 hover:bg-emerald-50 rounded-xl transition group text-slate-700">
+                             <i class="fas fa-sync-alt ml-2 text-emerald-500"></i>
+                            <span class="font-bold uppercase text-[10px] ml-1">Image Converter</span>
                         </a>
                         <a href="../image-resizer/index.php" class="flex items-center gap-3 p-3 hover:bg-orange-50 rounded-xl transition group text-slate-700">
                              <i class="fas fa-images ml-2 text-[#8B4513]"></i>
@@ -112,7 +112,7 @@ $themeHex = isset($themeHex) ? $themeHex : '#000000'; // Color por defecto
     <div x-show="open" x-cloak class="md:hidden fixed inset-0 z-40 bg-white pt-24 px-6" x-transition>
         <div class="flex flex-col gap-6 text-center">
             <a href="../tiktok/index.php" class="text-xl font-bold text-black">TikTok</a>
-            <a href="../facebook/index.php" class="text-xl font-bold text-[#1877F2]">Facebook</a>
+            <a href="../image-converter/index.php" class="text-xl font-bold text-emerald-500">Converter</a>
             <a href="../image-resizer/index.php" class="text-xl font-bold text-[#8B4513]">Resizer</a>
             <button @click="open = false" class="mt-8 text-gray-400 uppercase text-xs font-black">Cerrar</button>
         </div>

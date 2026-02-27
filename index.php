@@ -68,11 +68,11 @@
                             </div>
                             <span class="text-slate-700 font-bold">TikTok Downloader</span>
                         </a>
-                        <a href="tools/facebook/index.php" class="flex items-center gap-3 p-3 hover:bg-blue-50 rounded-xl transition group">
-                            <div class="w-8 h-8 bg-[#1877F2] rounded-lg flex items-center justify-center text-white text-xs group-hover:bg-blue-600">
-                                <i class="fab fa-facebook-f"></i>
+                        <a href="tools/image-converter/index.php" class="flex items-center gap-3 p-3 hover:bg-emerald-50 rounded-xl transition group">
+                            <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-white text-xs group-hover:bg-emerald-600">
+                                <i class="fas fa-sync-alt"></i>
                             </div>
-                            <span class="text-slate-700 font-bold">Facebook Video</span>
+                            <span class="text-slate-700 font-bold">Image Converter</span>
                         </a>
                         <a href="tools/image-resizer/index.php" class="flex items-center gap-3 p-3 hover:bg-purple-50 rounded-xl transition group">
                             <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600 text-xs group-hover:bg-purple-600 group-hover:text-white">
@@ -118,15 +118,15 @@
                 </div>
             </a>
 
-            <a href="tools/facebook/index.php" class="card-shadow group bg-white p-10 rounded-[3rem] flex flex-col">
-                <div class="w-16 h-16 bg-[#1877F2] rounded-2xl flex items-center justify-center mb-8 group-hover:bg-blue-600 transition-colors shadow-lg">
-                    <i class="fab fa-facebook-f text-2xl text-white"></i>
+            <a href="tools/image-converter/index.php" class="card-shadow group bg-white p-10 rounded-[3rem] flex flex-col">
+                <div class="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-emerald-600 transition-colors shadow-lg">
+                    <i class="fas fa-sync-alt text-2xl text-white"></i>
                 </div>
-                <h3 class="text-3xl font-black mb-4 tracking-tighter uppercase">Facebook Video</h3>
+                <h3 class="text-3xl font-black mb-4 tracking-tighter uppercase">Image Converter</h3>
                 <p class="text-gray-500 leading-relaxed mb-8 flex-grow font-medium">
-                    Descarga Reels de Facebook y videos en alta definición. Solo pega el link del video público y guárdalo al instante.
+                    Convierte imágenes a formatos WebP, PNG o JPG de forma instantánea. Optimiza la compatibilidad de tus archivos sin perder calidad.
                 </p>
-                <div class="flex items-center text-[#1877F2] font-black text-sm gap-2">
+                <div class="flex items-center text-emerald-600 font-black text-sm gap-2">
                     LANZAR AHORA <i class="fas fa-arrow-right"></i>
                 </div>
             </a>
