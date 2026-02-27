@@ -1,48 +1,83 @@
 <?php
+/**
+ * Image Converter Pro - Nexosyne Zero-Storage
+ * Flujo: Cliente -> RAM -> Cliente (Sin dejar rastro en disco)
+ */
+
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
     $file = $_FILES['image'];
-    $targetFormat = $_POST['format'] ?? 'webp';
-    
-    // Validar tipo de archivo
-    $mime = mime_content_type($file['tmp_name']);
-    $allowedMimes = ['image/jpeg', 'image/png', 'image/webp'];
-    
-    if (!in_array($mime, $allowedMimes)) {
-        echo json_encode(['success' => false, 'error' => 'Formato no soportado.']);
+    $targetFormat = strtolower($_POST['format'] ?? 'webp');
+    $tmpPath = $file['tmp_name'];
+
+    if (!file_exists($tmpPath)) {
+        echo json_encode(['success' => false, 'error' => 'Archivo no detectado.']);
         exit;
     }
 
-    // Crear recurso de imagen según el origen
+    // 1. Cargar imagen a la memoria RAM desde el temporal nativo de PHP
+    $mime = mime_content_type($tmpPath);
     switch ($mime) {
-        case 'image/jpeg': $img = imagecreatefromjpeg($file['tmp_name']); break;
-        case 'image/png':  $img = imagecreatefrompng($file['tmp_name']); break;
-        case 'image/webp': $img = imagecreatefromwebp($file['tmp_name']); break;
+        case 'image/jpeg': $img = imagecreatefromjpeg($tmpPath); break;
+        case 'image/png':  $img = imagecreatefrompng($tmpPath); break;
+        case 'image/webp': $img = imagecreatefromwebp($tmpPath); break;
+        case 'image/bmp':  $img = imagecreatefrombmp($tmpPath); break;
+        case 'image/gif':  $img = imagecreatefromgif($tmpPath); break;
+        default:
+            echo json_encode(['success' => false, 'error' => 'Formato no soportado.']);
+            exit;
     }
 
-    // Preparar el nombre del archivo de salida
-    $newName = pathinfo($file['name'], PATHINFO_FILENAME) . "_nexosyne." . $targetFormat;
-    $outputDir = 'temp_converted/'; // Asegúrate de crear esta carpeta con permisos de escritura
-    
-    if (!is_dir($outputDir)) mkdir($outputDir, 0777, true);
-    
-    $outputPath = $outputDir . uniqid() . "_" . $newName;
+    // 2. Iniciar Buffer de salida (Captura la imagen en RAM)
+    ob_start(); 
+    $contentType = '';
 
-    // Convertir y Guardar
     switch ($targetFormat) {
-        case 'webp': imagewebp($img, $outputPath, 80); break;
-        case 'jpg':  imagejpeg($img, $outputPath, 85); break;
-        case 'png':  imagepng($img, $outputPath); break;
+        case 'webp':
+            imagepalettetotruecolor($img);
+            imagealphablending($img, true);
+            imagesavealpha($img, true);
+            imagewebp($img, null, 80);
+            $contentType = 'image/webp';
+            break;
+        case 'jpg':
+        case 'jpeg':
+            $bg = imagecreatetruecolor(imagesx($img), imagesy($img));
+            imagefill($bg, 0, 0, imagecolorallocate($bg, 255, 255, 255));
+            imagecopy($bg, $img, 0, 0, 0, 0, imagesx($img), imagesy($img));
+            imagejpeg($bg, null, 85);
+            imagedestroy($bg);
+            $contentType = 'image/jpeg';
+            break;
+        case 'png':
+            imagepalettetotruecolor($img);
+            imagesavealpha($img, true);
+            imagepng($img, null);
+            $contentType = 'image/png';
+            break;
+        case 'ico':
+            $tmpIco = imagecreatetruecolor(32, 32);
+            imagealphablending($tmpIco, false);
+            imagesavealpha($tmpIco, true);
+            imagecopyresampled($tmpIco, $img, 0, 0, 0, 0, 32, 32, imagesx($img), imagesy($img));
+            imagepng($tmpIco, null);
+            imagedestroy($tmpIco);
+            $contentType = 'image/x-icon';
+            break;
+        case 'bmp':
+            imagebmp($img, null);
+            $contentType = 'image/bmp';
+            break;
     }
 
-    imagedestroy($img);
+    $rawImage = ob_get_clean(); // Obtenemos los bits de la RAM
+    imagedestroy($img); // Destruimos el recurso en el servidor inmediatamente
 
+    // 3. Enviamos el resultado como Data URI (Base64)
     echo json_encode([
         'success' => true,
-        'url' => $outputPath,
-        'name' => $newName
+        'name' => pathinfo($file['name'], PATHINFO_FILENAME) . "_converted." . $targetFormat,
+        'url' => 'data:' . $contentType . ';base64,' . base64_encode($rawImage)
     ]);
-} else {
-    echo json_encode(['success' => false, 'error' => 'No se recibió ninguna imagen.']);
 }
