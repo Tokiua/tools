@@ -28,6 +28,9 @@ include '../../partials/Includes/header.php';
         <h1 class="text-4xl md:text-6xl font-black mb-4 uppercase italic">
             Image <span style="color: <?= $themeHex ?>;">Converter</span>
         </h1>
+        <h3 class="text-xl md:text-2xl font-black uppercase italic tracking-tighter text-black mb-4">
+    Cambia el formato de tu archivo y <span class="text-theme">transforma tu activo</span>
+</h3>
         <p class="text-gray-500 font-bold uppercase text-[10px] tracking-[0.3em]">
             Procesamiento por lote inteligente | Cero Almacenamiento
         </p>

@@ -9,6 +9,9 @@ include '../../partials/Includes/header.php';
         <h1 class="text-4xl md:text-6xl font-black mb-4 tracking-tight uppercase italic text-black">
             TikTok <span class="text-theme">Master</span>
         </h1>
+        <h3 class="text-xl md:text-2xl font-black uppercase italic tracking-tighter text-black mb-4">
+    Descarga tus videos <span class="text-theme">sin marca de agua</span> en HD
+</h3>
         <p class="text-gray-500 font-bold uppercase text-[10px] md:text-xs tracking-[0.3em]">
             Analizador de Perfil, Video y Fotos
         </p>

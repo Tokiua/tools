@@ -9,6 +9,9 @@ include '../../partials/Includes/header.php';
         <h1 class="text-4xl md:text-6xl font-black mb-4 tracking-tight uppercase italic text-black">
             Image <span class="text-theme">Optimizer</span>
         </h1>
+        <h3 class="text-xl md:text-2xl font-black uppercase italic tracking-tighter text-black mb-4">
+    Reduce el tamaño y <span class="text-theme">compacta tus fotos</span> al instante
+</h3>
         <p class="text-gray-500 font-bold uppercase text-[10px] md:text-xs tracking-[0.3em]">
             Redimensiona y optimiza tus fotos al instante
         </p>
