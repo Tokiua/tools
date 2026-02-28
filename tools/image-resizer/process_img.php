@@ -1,11 +1,11 @@
 <?php
 /**
- * Nexosyne Image Engine - Direct Download
+ * Nexosyne Image Engine - Zero Storage
  */
 
-// Limpiar cualquier salida previa para evitar archivos corruptos
-ob_start();
+// Desactivar errores visibles para no romper el binario de la imagen
 ini_set('display_errors', 0);
+error_reporting(0);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
     
@@ -17,9 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
     if ($file['error'] !== UPLOAD_ERR_OK) exit;
 
     $info = getimagesize($file['tmp_name']);
+    if (!$info) exit;
     $mime = $info['mime'];
 
-    // Cargar imagen
+    // 1. Cargar imagen a memoria RAM
     switch ($mime) {
         case 'image/jpeg': $src = imagecreatefromjpeg($file['tmp_name']); break;
         case 'image/png':  $src = imagecreatefrompng($file['tmp_name']);  break;
@@ -27,10 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
         default: exit;
     }
 
-    // Crear lienzo exacto
+    // 2. Crear lienzo de destino
     $dst = imagecreatetruecolor($w, $h);
 
-    // Transparencia / Fondo
+    // Manejo de transparencia
     if ($format === 'png' || $format === 'webp') {
         imagealphablending($dst, false);
         imagesavealpha($dst, true);
@@ -41,31 +42,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
         imagefilledrectangle($dst, 0, 0, $w, $h, $white);
     }
 
-    // Redimensionar forzado
+    // 3. Redimensionar (Proceso en RAM)
     imagecopyresampled($dst, $src, 0, 0, 0, 0, $w, $h, $info[0], $info[1]);
 
-    // Limpiar buffer y enviar cabeceras de descarga
-    ob_end_clean();
+    // 4. Limpiar cualquier buffer previo
+    if (ob_get_length()) ob_clean();
+
+    // 5. Cabeceras de descarga directa
     $ext = ($format === 'webp') ? 'webp' : (($format === 'png') ? 'png' : 'jpg');
-    
-    header('Content-Description: File Transfer');
     header('Content-Type: application/octet-stream');
     header('Content-Disposition: attachment; filename="nexosyne_'.time().'.'.$ext.'"');
-    header('Content-Transfer-Encoding: binary');
-    header('Expires: 0');
-    header('Cache-Control: must-revalidate');
-    header('Pragma: public');
+    header('Cache-Control: no-cache');
 
-    // Generar archivo directamente al flujo de salida
+    // 6. Generar salida directamente al navegador
     if ($format === 'webp') {
-        if (function_exists('imagewebp')) imagewebp($dst, null, 80);
-        else imagejpeg($dst, null, 90);
+        imagewebp($dst, null, 85);
     } elseif ($format === 'png') {
         imagepng($dst);
     } else {
-        imagejpeg($dst, null, 90);
+        imagejpeg($dst, null, 85);
     }
 
+    // 7. Liberar memoria RAM inmediatamente
     imagedestroy($src);
     imagedestroy($dst);
     exit;

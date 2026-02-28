@@ -1,7 +1,6 @@
 <?php
-// Configuración por defecto si no se define en la página
 $pageTitle = isset($pageTitle) ? $pageTitle : 'Nexosyne Tools';
-$themeHex = isset($themeHex) ? $themeHex : '#000000'; // Color por defecto
+$themeHex = isset($themeHex) ? $themeHex : '#7c3aed'; 
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -15,61 +14,27 @@ $themeHex = isset($themeHex) ? $themeHex : '#000000'; // Color por defecto
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root {
-            --theme-color: <?php echo $themeHex; ?>;
-        }
-        
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfc; scroll-behavior: smooth; }
-        
+        :root { --theme-color: <?php echo $themeHex; ?>; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfc; overflow-x: hidden; }
         .text-theme { color: var(--theme-color); }
-        .bg-theme { background-color: var(--theme-color); }
-        .border-theme { border-color: var(--theme-color); }
         .hover-text-theme:hover { color: var(--theme-color); }
-        .hover-bg-theme:hover { background-color: var(--theme-color); }
-        .shadow-theme { box-shadow: 8px 8px 0px var(--theme-color); }
-        .shadow-theme-lg { box-shadow: 15px 15px 0px var(--theme-color); }
-        
-        .glass-nav { 
-            backdrop-filter: blur(12px); 
-            background: rgba(255, 255, 255, 0.95); 
-            border-bottom: 2px solid rgba(0,0,0,0.05); 
+        .glass-nav { backdrop-filter: blur(12px); background: rgba(255, 255, 255, 0.95); border-bottom: 2px solid rgba(0,0,0,0.05); }
+        .card-unified { 
+            transition: all 0.3s ease; 
+            border: 2px solid #f3f4f6; 
+            background: white; 
+            border-radius: 2.5rem;
         }
-        
-        .tool-container { 
-            border: 3px solid #000; 
-            box-shadow: 8px 8px 0px var(--theme-color);
-        }
-
-        @media (min-width: 768px) {
-            .tool-container { border: 4px solid #000; box-shadow: 15px 15px 0px var(--theme-color); }
-        }
-        
-        .input-style {
-            background-color: #f9fafb;
-            border: 2px solid #f3f4f6;
-            border-radius: 1rem;
-            padding: 1rem;
-            font-weight: 800;
-            width: 100%;
-            outline: none;
-            transition: all 0.2s;
-        }
-        .input-style:focus {
-            border-color: var(--theme-color);
-            background-color: #fff;
-        }
-
+        .card-unified:hover { border-color: var(--theme-color); transform: translateY(-2px); }
         [x-cloak] { display: none !important; }
-        .loading-dots:after { content: '.'; animation: dots 1.5s infinite; }
-        @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } 80%, 100% { content: ''; } }
     </style>
 </head>
-<body class="antialiased text-slate-900">
+<body class="antialiased text-slate-900" x-data="nexosyneCore()">
 
-    <nav class="glass-nav sticky top-0 z-50 py-4 px-6 md:px-12 flex justify-between items-center" x-data="{ open: false }">
+    <nav class="glass-nav sticky top-0 z-[100] py-4 px-6 md:px-12 flex justify-between items-center">
         <div class="flex items-center gap-3">
             <a href="../../index.php" class="flex items-center gap-3">
-                <img src="../../assets/img/Gemini_Generated_Image_ko7frako7frako7f.png" alt="Nexosyne Logo" class="h-10">
+                <img src="../../assets/img/Gemini_Generated_Image_ko7frako7frako7f.png" alt="Logo" class="h-10">
                 <span class="text-xl font-extrabold tracking-tighter text-black">
                     Nexosyne<span class="text-theme">Tools</span>
                 </span>
@@ -77,43 +42,50 @@ $themeHex = isset($themeHex) ? $themeHex : '#000000'; // Color por defecto
         </div>
 
         <div class="hidden md:flex gap-8 text-xs font-black uppercase tracking-widest text-gray-400 items-center">
-            <div class="relative" @mouseleave="open = false">
-                <button @mouseover="open = true" class="flex items-center gap-2 text-black hover-text-theme transition py-2 uppercase">
+            <div class="relative" x-data="{ dropdown: false }" @mouseleave="dropdown = false">
+                <button @mouseover="dropdown = true" class="flex items-center gap-2 text-black hover-text-theme transition py-2">
                     Herramientas <i class="fas fa-chevron-down text-[10px]"></i>
                 </button>
-                <div x-show="open" x-cloak class="absolute left-0 mt-0 w-64 bg-white border-2 border-gray-100 shadow-2xl rounded-2xl overflow-hidden z-50">
+                <div x-show="dropdown" x-cloak class="absolute left-0 mt-0 w-64 bg-white border-2 border-gray-100 shadow-2xl rounded-2xl overflow-hidden">
                     <div class="p-2 flex flex-col">
-                        <a href="../tiktok/index.php" class="flex items-center gap-3 p-3 hover:bg-purple-50 rounded-xl transition group text-slate-700">
-                            <i class="fab fa-tiktok ml-2 text-black group-hover:text-purple-600"></i>
-                            <span class="font-bold uppercase text-[10px] ml-1">TikTok Downloader</span>
-                        </a>
-                        <a href="../image-converter/index.php" class="flex items-center gap-3 p-3 hover:bg-emerald-50 rounded-xl transition group text-slate-700">
-                             <i class="fas fa-sync-alt ml-2 text-emerald-500"></i>
-                            <span class="font-bold uppercase text-[10px] ml-1">Image Converter</span>
-                        </a>
-                        <a href="../image-resizer/index.php" class="flex items-center gap-3 p-3 hover:bg-orange-50 rounded-xl transition group text-slate-700">
-                             <i class="fas fa-images ml-2 text-[#8B4513]"></i>
-                            <span class="font-bold uppercase text-[10px] ml-1">Image Resizer</span>
-                        </a>
+                        <template x-for="item in menuItems">
+                            <a @click="go(item.id)" class="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl transition group cursor-pointer">
+                                <i :class="item.icon + ' ml-2 ' + item.textCol"></i>
+                                <span class="font-bold text-slate-700 text-[10px]" x-text="item.name"></span>
+                            </a>
+                        </template>
                     </div>
                 </div>
             </div>
-            <a href="../../index.php#como-usar" class="hover-text-theme transition">Guía</a>
-            <a href="../../index.php#nosotros" class="hover-text-theme transition">Tecnología</a>
+            <a href="../../index.php#nosotros" class="hover-text-theme transition text-black">Tecnología</a>
         </div>
         
         <div class="md:hidden">
-            <button @click="open = !open" class="text-black text-xl">
+            <button @click="mobileMenu = true" class="text-black text-2xl">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
     </nav>
     
-    <div x-show="open" x-cloak class="md:hidden fixed inset-0 z-40 bg-white pt-24 px-6" x-transition>
-        <div class="flex flex-col gap-6 text-center">
-            <a href="../tiktok/index.php" class="text-xl font-bold text-black">TikTok</a>
-            <a href="../image-converter/index.php" class="text-xl font-bold text-emerald-500">Converter</a>
-            <a href="../image-resizer/index.php" class="text-xl font-bold text-[#8B4513]">Resizer</a>
-            <button @click="open = false" class="mt-8 text-gray-400 uppercase text-xs font-black">Cerrar</button>
+    <div x-show="mobileMenu" x-cloak 
+         class="fixed inset-0 z-[200] bg-white flex flex-col p-8"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="translate-x-full"
+         x-transition:enter-end="translate-x-0">
+        
+        <div class="flex justify-between items-center mb-10">
+            <span class="font-black text-xl tracking-tighter italic">NEXOSYNE <span class="text-theme">MENU</span></span>
+            <button @click="mobileMenu = false" class="text-3xl">&times;</button>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <template x-for="item in menuItems">
+                <a @click="go(item.id)" class="flex items-center gap-4 p-5 rounded-2xl border-2 border-gray-50 bg-gray-50/50 font-extrabold uppercase text-xs shadow-sm">
+                    <div :class="'w-10 h-10 rounded-lg flex items-center justify-center text-white ' + item.bgCol">
+                        <i :class="item.icon"></i>
+                    </div>
+                    <span x-text="item.name"></span>
+                </a>
+            </template>
         </div>
     </div>

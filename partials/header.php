@@ -1,78 +1,84 @@
+<?php
+$pageTitle = isset($pageTitle) ? $pageTitle : 'Nexosyne Tools';
+$themeHex = isset($themeHex) ? $themeHex : '#7c3aed'; 
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexosyne Tools - Herramientas Multimedia</title>
-    <!-- Tailwind CSS -->
+    <title><?php echo $pageTitle; ?> | Nexosyne Tools</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <!-- GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        nexoblack: '#0a0a0a',
-                        nexopurple: '#7c3aed',
-                        nexowhite: '#ffffff',
-                        nexogray: '#f3f4f6'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        body { background-color: #f3f4f6; }
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-        }
+        :root { --theme-color: <?php echo $themeHex; ?>; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfc; overflow-x: hidden; }
+        .text-theme { color: var(--theme-color); }
+        .hover-text-theme:hover { color: var(--theme-color); }
+        .glass-nav { backdrop-filter: blur(12px); background: rgba(255, 255, 255, 0.95); border-bottom: 2px solid rgba(0,0,0,0.05); }
+        [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="text-nexoblack flex h-screen overflow-hidden">
+<body class="antialiased text-slate-900" x-data="nexosyneCore()">
 
-    <!-- Sidebar -->
-    <aside class="w-64 bg-nexoblack text-white hidden md:flex flex-col justify-between p-6 shadow-2xl z-20">
-        <div>
-            <div class="text-2xl font-bold tracking-tighter mb-10 text-nexopurple">
-                NEXOSYNE<span class="text-white">TOOLS</span>
-            </div>
-            <nav class="space-y-4">
-                <a href="/" class="block py-2 px-4 rounded hover:bg-nexopurple transition duration-300">🏠 Inicio</a>
-                <div class="text-xs text-gray-500 uppercase mt-4 font-semibold">Video</div>
-                <a href="/tools/tiktok" class="block py-2 px-4 rounded hover:bg-gray-800 transition">🎵 TikTok Downloader</a>
-                <a href="/tools/youtube" class="block py-2 px-4 rounded hover:bg-gray-800 transition">📺 YouTube Converter</a>
-                <div class="text-xs text-gray-500 uppercase mt-4 font-semibold">Imagen</div>
-                <a href="/tools/image-resizer" class="block py-2 px-4 rounded hover:bg-gray-800 transition">🖼️ Resizer</a>
-            </nav>
+    <nav class="glass-nav sticky top-0 z-[100] py-4 px-6 md:px-12 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <a href="../../index.php" class="flex items-center gap-3">
+                <img src="../../assets/img/Gemini_Generated_Image_ko7frako7frako7f.png" alt="Logo" class="h-10">
+                <span class="text-xl font-extrabold tracking-tighter text-black">
+                    Nexosyne<span class="text-theme">Tools</span>
+                </span>
+            </a>
         </div>
-        <div class="text-xs text-gray-500">
-            v2.0.0 | Nexosyne
-        </div>
-    </aside>
 
-    <!-- Main Content Wrapper -->
-    <div class="flex-1 flex flex-col h-screen overflow-y-auto relative">
-        <!-- Top Header -->
-        <header class="bg-white h-16 shadow-sm flex items-center justify-between px-8 sticky top-0 z-10">
-            <h1 class="font-bold text-lg">Panel de Herramientas</h1>
-            <!-- Ad Placeholder -->
-            <div class="hidden lg:block w-96 h-10 bg-gray-200 rounded animate-pulse flex items-center justify-center text-xs text-gray-400">
-                Espacio Publicitario (Header)
+        <div class="hidden md:flex gap-8 text-xs font-black uppercase tracking-widest text-gray-400 items-center">
+            <div class="relative" x-data="{ dropdown: false }" @mouseleave="dropdown = false">
+                <button @mouseover="dropdown = true" class="flex items-center gap-2 text-black hover-text-theme transition py-2">
+                    Herramientas <i class="fas fa-chevron-down text-[10px]"></i>
+                </button>
+                <div x-show="dropdown" x-cloak class="absolute left-0 mt-0 w-64 bg-white border-2 border-gray-100 shadow-2xl rounded-2xl overflow-hidden">
+                    <div class="p-2 flex flex-col">
+                        <template x-for="item in menuItems">
+                            <a @click="go(item.id)" class="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl transition group cursor-pointer">
+                                <i :class="item.icon + ' ml-2 ' + item.textCol"></i>
+                                <span class="font-bold text-slate-700 text-[10px]" x-text="item.name"></span>
+                            </a>
+                        </template>
+                    </div>
+                </div>
             </div>
-        </header>
+            <a href="../../index.php#nosotros" class="hover-text-theme transition text-black">Tecnología</a>
+        </div>
+        
+        <div class="md:hidden">
+            <button @click="mobileMenu = true" class="text-black text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <div x-show="mobileMenu" x-cloak 
+         class="fixed inset-0 z-[200] bg-white flex flex-col p-8"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="translate-x-full"
+         x-transition:enter-end="translate-x-0">
+        
+        <div class="flex justify-between items-center mb-10">
+            <span class="font-black text-xl tracking-tighter">NEXOSYNE <span class="text-theme">MENU</span></span>
+            <button @click="mobileMenu = false" class="text-3xl">&times;</button>
+        </div>
 
-        <!-- Main Content Area -->
-        <main class="p-8 flex-1">
-<!-- Header Placeholder -->
+        <div class="flex flex-col gap-3">
+            <template x-for="item in menuItems">
+                <a @click="go(item.id)" class="flex items-center gap-4 p-5 rounded-2xl border-2 border-gray-50 bg-gray-50/50 font-extrabold uppercase text-xs shadow-sm">
+                    <div :class="'w-10 h-10 rounded-lg flex items-center justify-center text-white ' + item.bgCol">
+                        <i :class="item.icon"></i>
+                    </div>
+                    <span x-text="item.name"></span>
+                </a>
+            </template>
+        </div>
+    </div>
