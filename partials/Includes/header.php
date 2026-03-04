@@ -17,150 +17,183 @@ $themeHex = isset($themeHex) ? $themeHex : '#7c3aed';
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<link rel="icon" type="image/png" href="/assets/img/192x192.png">
+<link rel="icon" href="../../assets/img/nexosyne.ico" type="image/x-icon">
 
 <style>
 :root { --theme-color: <?php echo $themeHex; ?>; }
 
 body{
-font-family:'Plus Jakarta Sans',sans-serif;
-background:#fcfcfc;
-overflow-x:hidden;
+    font-family:'Plus Jakarta Sans',sans-serif;
+    background:#fcfcfc;
+    overflow-x:hidden;
 }
 
 .text-theme{ color:var(--theme-color); }
 .hover-text-theme:hover{ color:var(--theme-color); }
+.bg-theme{ background-color: var(--theme-color); }
 
 .glass-nav{
-backdrop-filter:blur(12px);
-background:rgba(255,255,255,.95);
-border-bottom:2px solid rgba(0,0,0,.05);
+    backdrop-filter:blur(12px);
+    background:rgba(255,255,255,.95);
+    border-bottom:2px solid rgba(0,0,0,.05);
 }
 
 [x-cloak]{ display:none!important; }
 
 /* SPLASH */
 #splash{
-position:fixed;
-inset:0;
-background:<?php echo $themeHex; ?>;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-z-index:9999;
-transition:opacity .6s ease;
+    position:fixed; inset:0; background:<?php echo $themeHex; ?>;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    z-index:9999; transition:opacity .6s ease;
 }
 
 .logo-animate{
-width:200px;
-height:200px;
-object-fit:contain;
-animation:floatLogo 3s ease-in-out infinite;
+    width:200px; height:200px; object-fit:contain;
+    animation:floatLogo 3s ease-in-out infinite;
 }
 
 @keyframes floatLogo{
-0%{transform:translateY(0);}
-50%{transform:translateY(-12px);}
-100%{transform:translateY(0);}
+    0%{transform:translateY(0);}
+    50%{transform:translateY(-12px);}
+    100%{transform:translateY(0);}
 }
 
 .loader-ring{
-margin-top:30px;
-width:45px;
-height:45px;
-border:4px solid rgba(255,255,255,.3);
-border-top:4px solid white;
-border-radius:50%;
-animation:spin 1s linear infinite;
+    margin-top:30px; width:45px; height:45px;
+    border:4px solid rgba(255,255,255,.3); border-top:4px solid white;
+    border-radius:50%; animation:spin 1s linear infinite;
 }
 
-@keyframes spin{
-to{transform:rotate(360deg);}
+@keyframes spin{ to{transform:rotate(360deg);} }
+
+.mobile-menu-scroll {
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
 }
 </style>
 </head>
 
-<body class="antialiased text-slate-900" x-data="nexosyneCore()">
+<body class="antialiased text-slate-900" x-data="{ mobileMenu: false, ...nexosyneCore() }">
 
-<!-- 🔥 SPLASH -->
 <div id="splash">
-<img src="../../assets/img/Gemini_Generated_Image_ko7frako7frako7f.png" class="logo-animate">
-<h1 style="color:white;margin-top:25px;font-size:26px;font-weight:800;">
-Nexosyne Tools
-</h1>
-<p style="color:rgba(255,255,255,.85);margin-top:10px;font-size:15px;">
-Cargando herramienta cómoda...
-</p>
-<div class="loader-ring"></div>
+    <img src="../../assets/img/Gemini_Generated_Image_ko7frako7frako7f.png" class="logo-animate">
+    <h1 style="color:white;margin-top:25px;font-size:26px;font-weight:800;">Nexosyne Tools</h1>
+    <p style="color:rgba(255,255,255,.85);margin-top:10px;font-size:15px;">Cargando herramienta...</p>
+    <div class="loader-ring"></div>
+</div>
+
+<nav class="glass-nav sticky top-0 z-[100] py-4 px-6 md:px-12 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+        <a href="../../index.php" class="flex items-center gap-3">
+            <img src="../../assets/img/Gemini_Generated_Image_ko7frako7frako7f.png" alt="Logo" class="h-10">
+            <span class="text-xl font-extrabold tracking-tighter text-black">
+                Nexosyne<span class="text-theme">Tools</span>
+            </span>
+        </a>
+    </div>
+
+    <div class="hidden md:flex gap-8 text-xs font-black uppercase tracking-widest text-gray-500 items-center">
+        <a href="../../index.php" class="hover-text-theme transition text-black uppercase">INICIO</a>
+
+        <div class="relative" x-data="{ dropdown: false }" @mouseleave="dropdown = false">
+            <button @mouseover="dropdown = true" class="flex items-center gap-2 text-black hover-text-theme transition py-2">
+                HERRAMIENTAS <i class="fas fa-chevron-down text-[10px]"></i>
+            </button>
+            <div x-show="dropdown" x-cloak class="absolute left-0 mt-0 w-64 bg-white border-2 border-gray-100 shadow-2xl rounded-2xl overflow-hidden">
+                <div class="p-2 flex flex-col">
+                    <template x-for="item in menuItems" :key="item.id">
+                        <a @click="go(item.id)" class="flex items-center gap-3 p-3 hover:bg-purple-50 rounded-xl transition group cursor-pointer">
+                            <div :class="`w-8 h-8 rounded-lg flex items-center justify-center text-white text-[10px] ${item.bgCol}`">
+                                <i :class="item.icon"></i>
+                            </div>
+                            <span class="font-bold text-slate-700 text-[11px]" x-text="item.name"></span>
+                        </a>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <a href="../../index.php#nosotros" class="hover-text-theme transition text-black">Tecnología</a>
+    </div>
+
+    <div class="md:hidden flex items-center">
+        <button @click="mobileMenu = true" class="text-black text-2xl w-10 h-10 flex items-center justify-center focus:outline-none">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+<div x-show="mobileMenu" x-cloak class="fixed inset-0 z-[110] md:hidden">
+    <div x-show="mobileMenu" x-transition:enter="transition-opacity duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" @click="mobileMenu = false" class="fixed inset-0 bg-black/60 backdrop-blur-sm"></div>
+
+    <div x-show="mobileMenu" x-transition:enter="transition transform duration-300" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" class="fixed inset-y-0 right-0 z-[111] w-full max-w-xs bg-white shadow-xl flex flex-col">
+        <div class="flex items-center justify-between px-6 py-6 border-b border-gray-100">
+            <span class="font-black text-lg tracking-tighter uppercase">Menú</span>
+            <button @click="mobileMenu = false" class="text-gray-500 text-2xl w-10 h-10 flex items-center justify-center">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 mobile-menu-scroll px-4 py-4">
+            <div class="flex flex-col gap-2">
+                <a href="../../index.php" class="p-4 font-black text-xs uppercase tracking-widest text-slate-800 bg-gray-50 rounded-2xl flex items-center">
+                    <i class="fas fa-home mr-3 text-theme"></i> INICIO
+                </a>
+                
+                <div class="mt-6 px-4 font-black text-[10px] text-gray-400 uppercase tracking-[0.2em] mb-2 text-center">Nuestras Herramientas</div>
+                
+                <template x-for="item in menuItems" :key="item.id">
+                    <a @click="go(item.id); mobileMenu = false" class="flex items-center gap-4 p-4 hover:bg-gray-50 rounded-2xl transition group cursor-pointer border border-transparent hover:border-gray-100">
+                        <div :class="`w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-sm ${item.bgCol}`">
+                            <i :class="item.icon + ' text-lg'"></i>
+                        </div>
+                        <span class="font-bold text-slate-700 uppercase text-xs" x-text="item.name"></span>
+                    </a>
+                </template>
+
+                <a href="../../index.php#nosotros" @click="mobileMenu = false" class="mt-4 p-4 font-black text-xs uppercase tracking-widest text-slate-800 bg-gray-50 rounded-2xl flex items-center">
+                    <i class="fas fa-microchip mr-3 text-theme"></i> Tecnología
+                </a>
+            </div>
+        </div>
+        <div class="p-6 bg-gray-50 text-center">
+            <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Nexosyne Tools v3.0</p>
+        </div>
+    </div>
 </div>
 
 <script>
 window.addEventListener("load",function(){
-setTimeout(()=>{
-document.getElementById("splash").style.opacity="0";
-setTimeout(()=>{
-document.getElementById("splash").remove();
-},600);
-},1200);
+    setTimeout(()=>{
+        const splash = document.getElementById("splash");
+        if(splash){
+            splash.style.opacity="0";
+            setTimeout(()=>{ splash.remove(); },600);
+        }
+    },1200);
 });
-</script>
 
-<!-- 🔵 NAVBAR COMPLETO -->
-<nav class="glass-nav sticky top-0 z-[100] py-4 px-6 md:px-12 flex justify-between items-center">
-    
-<div class="flex items-center gap-3">
-<a href="../../index.php" class="flex items-center gap-3">
-<img src="../../assets/img/Gemini_Generated_Image_ko7frako7frako7f.png" alt="Logo" class="h-10">
-<span class="text-xl font-extrabold tracking-tighter text-black">
-Nexosyne<span class="text-theme">Tools</span>
-</span>
-</a>
-</div>
-
-<div class="hidden md:flex gap-8 text-xs font-black uppercase tracking-widest text-gray-500 items-center">
-
-<a href="/index.php" class="hover-text-theme transition text-black">
-INICIO
-</a>
-
-<div class="relative" x-data="{ dropdown: false }" @mouseleave="dropdown = false">
-<button @mouseover="dropdown = true" class="flex items-center gap-2 text-black hover-text-theme transition py-2">
-HERRAMIENTAS <i class="fas fa-chevron-down text-[10px]"></i>
-</button>
-
-<div x-show="dropdown" x-cloak class="absolute left-0 mt-0 w-64 bg-white border-2 border-gray-100 shadow-2xl rounded-2xl overflow-hidden">
-<div class="p-2 flex flex-col">
-<template x-for="item in menuItems">
-<a @click="go(item.id)" class="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl transition group cursor-pointer">
-<i :class="item.icon + ' ml-2 ' + item.textCol"></i>
-<span class="font-bold text-slate-700 text-[10px]" x-text="item.name"></span>
-</a>
-</template>
-</div>
-</div>
-</div>
-
-<a href="/index.php#nosotros" class="hover-text-theme transition text-black">
-Tecnología
-</a>
-
-</div>
-
-<div class="md:hidden">
-<button @click="mobileMenu = true" class="text-black text-2xl">
-<i class="fas fa-bars"></i>
-</button>
-</div>
-
-</nav>
-
-<!-- 🔥 SERVICE WORKER LIMPIO -->
-<script>
-if ('serviceWorker' in navigator) {
-navigator.serviceWorker.register('/sw.js');
+if (typeof nexosyneCore !== 'function') {
+    window.nexosyneCore = function() {
+        return {
+            menuItems: [
+                { id: 'tiktok', name: 'TikTok Master', icon: 'fab fa-tiktok', bgCol: 'bg-black' },
+                { id: 'lector_doc', name: 'Lumina Stream', icon: 'fas fa-file-pdf', bgCol: 'bg-red-600' },
+                { id: 'image-converter', name: 'Image Converter', icon: 'fas fa-sync-alt', bgCol: 'bg-emerald-500' },
+                { id: 'image-resizer', name: 'Image Optimizer', icon: 'fas fa-compress-arrows-alt', bgCol: 'bg-purple-600' }
+            ],
+            go(id) {
+                window.location.href = `../../tools/${id}/index.php`;
+            }
+        }
+    }
 }
 </script>
 
+<script>
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js');
+}
+</script>
 </body>
 </html>

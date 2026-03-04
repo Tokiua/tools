@@ -67,7 +67,7 @@
         <div class="hidden md:flex gap-8 text-xs font-black uppercase tracking-widest text-gray-400 items-center">
             <div class="relative" x-data="{ open: false }" @mouseleave="open = false">
                 <button @mouseover="open = true" class="flex items-center gap-2 hover:text-purple-600 transition py-2 text-black">
-                    Herramientas <i class="fas fa-chevron-down text-[10px]"></i>
+                    HERRAMIENTAS <i class="fas fa-chevron-down text-[10px]"></i>
                 </button>
                 <div x-show="open" x-cloak class="absolute left-0 mt-0 w-64 bg-white border-2 border-gray-100 shadow-2xl rounded-2xl overflow-hidden z-50">
                     <div class="p-2 flex flex-col">
