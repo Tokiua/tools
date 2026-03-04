@@ -6,7 +6,7 @@ $color = isset($_GET['color']) ? $_GET['color'] : '#7c3aed';
 
 echo json_encode([
     "name" => $name,
-    "short_name" => "Nexosyne",
+    "short_name" => "Nexosyne Tools",
     "start_url" => "/index.php",
     "display" => "standalone",
     "background_color" => $color,

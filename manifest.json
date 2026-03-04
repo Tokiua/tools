@@ -1,6 +1,6 @@
 {
   "name": "Nexosyne Tools",
-  "short_name": "Nexosyne",
+  "short_name": "Nexosyne Tools",
   "start_url": "/index.php",
   "display": "standalone",
   "background_color": "#7c3aed",
