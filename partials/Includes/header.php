@@ -13,6 +13,20 @@ $themeHex = isset($themeHex) ? $themeHex : '#7c3aed';
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/png" href="../../assets/img/nexosyne.ico">
+    <!-- Favicon navegador -->
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/img/16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/img/32x32.png">
+
+    <!-- iPhone -->
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/img/180x180.png">
+
+    <!-- Android PWA -->
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="theme-color" content="#000000">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
         :root { --theme-color: <?php echo $themeHex; ?>; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfc; overflow-x: hidden; }
