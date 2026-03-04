@@ -21,9 +21,9 @@ $themeHex = isset($themeHex) ? $themeHex : '#7c3aed';
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/180x180.png">
 
     <!-- PWA -->
-    <link rel="manifest" href="/manifest.json">
+  <link rel="manifest" href="/manifest.php?color=<?php echo urlencode($themeHex); ?>">
 
-    <meta name="theme-color" content="#7c3aed">
+    <meta name="theme-color" content="<?php echo $themeHex; ?>">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
