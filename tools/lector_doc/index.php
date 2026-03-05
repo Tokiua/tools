@@ -1,5 +1,5 @@
 <?php
-$pageTitle = "Lumina Stream - Professional PDF Reader";
+$pageTitle = "Lumina Stream - PDF Master";
 $themeHex = "#ef4444"; 
 include '../../partials/Includes/header.php';
 ?>
@@ -9,120 +9,130 @@ include '../../partials/Includes/header.php';
 <style>
     :root { --theme: #ef4444; }
     
-    body { overflow-x: hidden; touch-action: pan-y; }
-
-    .lumina-card {
-        background: #111;
-        border-radius: 1.5rem;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        width: 100%;
+    .card-unified {
+        background: #ffffff;
+        border-radius: 2.5rem;
+        border: 2px solid #f3f4f6;
+        transition: all 0.3s ease;
     }
 
-    /* Altura fija en móviles para asegurar que el iframe cargue */
+    /* Contenedor del Visor */
     .viewer-wrapper {
-        width: 100%;
-        height: 60vh; 
-        background: #222;
         position: relative;
-        -webkit-overflow-scrolling: touch; /* Suavidad en iOS */
+        width: 100%;
+        height: 75vh;
+        background: #1a1a1a;
+        border-radius: 2rem;
+        overflow: hidden;
+        border: 3px solid #000;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .fullscreen-mode {
+    /* Estado Fullscreen */
+    .viewer-wrapper.is-fullscreen {
         position: fixed !important;
-        top: 0 !important; left: 0 !important;
+        top: 0;
+        left: 0;
         width: 100vw !important;
         height: 100vh !important;
-        z-index: 999999 !important;
-        background: #000;
-        border-radius: 0 !important;
+        z-index: 9999;
+        border-radius: 0;
+        border: none;
     }
 
-    .fullscreen-mode .viewer-wrapper {
-        height: 100% !important;
-    }
+    iframe { width: 100%; height: 100%; border: none; display: block; }
 
+    /* Botón Cerrar Flotante (Más abajo de la esquina) */
     .btn-exit-fs {
         position: absolute;
-        top: 10px;
-        right: 10px;
-        z-index: 1000001;
+        top: 80px; /* Bajado para no tapar la barra de herramientas */
+        right: 20px;
+        z-index: 10000;
         background: var(--theme);
-        color: white !important;
-        width: 38px;
-        height: 38px;
+        color: white;
+        width: 45px;
+        height: 45px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 2px solid #000;
+        border: 3px solid #000;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        cursor: pointer;
+        transition: transform 0.2s;
     }
 
-    iframe { width: 100%; height: 100%; border: none; }
+    .btn-exit-fs:hover { transform: scale(1.1); }
 
-    /* Estilo de información - Neubrutalism */
-    .info-box {
-        background: #ffffff;
-        border: 3px solid #000000;
-        border-radius: 12px;
-        padding: 1rem;
-        box-shadow: 4px 4px 0px #000;
+    .info-box-nex {
+        background: #fff;
+        border: 3px solid #000;
+        border-radius: 1.5rem;
+        padding: 1.25rem;
+        box-shadow: 6px 6px 0px #000;
     }
-    .info-box h4 { color: #000; font-weight: 900; text-transform: uppercase; font-size: 0.8rem; margin-bottom: 5px; border-bottom: 2px solid var(--theme); display: inline-block; }
-    .info-box p { color: #000; font-size: 0.75rem; font-weight: 600; }
 
     [x-cloak] { display: none !important; }
 </style>
 
-<main class="max-w-7xl mx-auto px-2 py-4" x-data="luminaPro()">
+<main class="max-w-5xl mx-auto px-4 py-10" x-data="luminaCore()">
     
-    <div class="text-center mb-6" x-show="!isFullScreen">
-        <h1 class="text-3xl font-black uppercase italic text-black leading-none">
+    <div class="text-center mb-10" x-show="!fullScreen">
+        <h1 class="text-4xl md:text-6xl font-black mb-2 tracking-tight uppercase italic text-black leading-none">
             Lumina <span class="text-theme">Stream</span>
         </h1>
-        <p class="text-[8px] tracking-[0.2em] font-bold text-gray-400 uppercase mt-1">Memoria Volátil • 2026</p>
+        <p class="text-gray-400 font-bold uppercase text-[9px] tracking-[0.3em]">Memoria Volátil • Pro Mode</p>
     </div>
 
-    <div class="lumina-card" :class="isFullScreen ? 'fullscreen-mode' : ''">
+    <div class="card-unified p-4 md:p-6 shadow-2xl" :class="fullScreen ? 'p-0 border-none' : ''">
         
-        <button x-show="isFullScreen" @click="isFullScreen = false" class="btn-exit-fs" x-cloak>
-            <i class="fas fa-times"></i>
-        </button>
-
-        <div x-show="!isLoaded" class="p-10 flex flex-col items-center justify-center text-center">
-            <div @click="$refs.fileInput.click()" class="border-2 border-dashed border-white/20 w-full py-10 rounded-3xl">
-                <i class="fas fa-file-pdf text-3xl text-gray-600 mb-2"></i>
-                <h3 class="text-white font-bold uppercase text-[10px]">Abrir PDF</h3>
+        <div x-show="!isLoaded" class="py-16 flex flex-col items-center justify-center text-center">
+            <div @click="$refs.fileInput.click()" 
+                 class="w-full max-w-md p-10 border-4 border-dashed border-gray-100 rounded-[3rem] cursor-pointer hover:border-theme transition-all bg-gray-50/50 group">
+                <i class="fas fa-file-pdf text-5xl text-gray-300 group-hover:text-theme mb-6 transition-colors"></i>
+                <h3 class="text-xl font-black uppercase italic mb-2">Abrir Documento</h3>
+                <p class="text-gray-400 font-bold text-[10px] uppercase">Lectura segura en tiempo real</p>
             </div>
         </div>
 
-        <div x-show="isLoaded" x-cloak class="flex flex-col h-full w-full">
-            <div x-show="!isFullScreen" class="bg-black p-2 flex justify-between items-center border-b border-white/10">
-                <div class="flex items-center gap-2">
-                    <span class="text-white text-[10px] font-bold uppercase" x-text="truncatedName"></span>
+        <div x-show="isLoaded" x-cloak class="flex flex-col w-full">
+            <div x-show="!fullScreen" class="flex justify-between items-center mb-4 bg-gray-50 p-3 rounded-2xl border border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-2 h-2 rounded-full bg-theme animate-pulse"></div>
+                    <span class="font-black text-black text-[10px] uppercase italic truncate max-w-[150px]" x-text="shortName"></span>
                 </div>
                 <div class="flex gap-2">
-                    <button @click="isFullScreen = true" class="bg-white/10 text-white p-2 rounded-lg text-[10px]">
-                        <i class="fas fa-expand"></i>
+                    <button @click="toggleFS()" class="bg-black text-white px-4 py-2 rounded-xl font-black text-[9px] uppercase hover:bg-theme transition-colors">
+                        <i class="fas fa-expand mr-1"></i> Pantalla Completa
                     </button>
-                    <button @click="reset()" class="bg-red-600/20 text-red-500 p-2 rounded-lg text-[10px]">
+                    <button @click="reset()" class="bg-gray-200 text-black px-4 py-2 rounded-xl font-black text-[9px] uppercase hover:bg-red-500 hover:text-white transition-colors">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
             </div>
 
-            <div class="viewer-wrapper">
-                <iframe x-ref="pdfIframe" src="" allowfullscreen></iframe>
+            <div class="viewer-wrapper" :class="fullScreen ? 'is-fullscreen' : ''">
+                <button x-show="fullScreen" @click="toggleFS()" class="btn-exit-fs" x-cloak>
+                    <i class="fas fa-times"></i>
+                </button>
+                
+                <iframe x-ref="pdfIframe" src="" allow="fullscreen"></iframe>
             </div>
         </div>
     </div>
 
-    <div class="mt-6 grid grid-cols-1 gap-4" x-show="!isFullScreen">
-        <div class="info-box">
-            <h4>Lectura Segura</h4>
-            <p>El archivo se procesa en RAM. Si el lector no carga en tu celular, asegúrate de haber seleccionado un archivo .pdf válido.</p>
+    <div x-show="!fullScreen" class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="info-box-nex">
+            <h4 class="font-black uppercase italic text-xs mb-2">Visualización Adaptativa</h4>
+            <p class="text-gray-500 font-bold text-[10px] uppercase">
+                El visor ajusta automáticamente el ancho del PDF según tu dispositivo (Móvil o PC).
+            </p>
+        </div>
+        <div class="info-box-nex">
+            <h4 class="font-black uppercase italic text-xs mb-2">Privacidad RAM</h4>
+            <p class="text-gray-500 font-bold text-[10px] uppercase text-theme">
+                Nada se almacena en Hostinger. Todo el procesamiento es local.
+            </p>
         </div>
     </div>
 
@@ -130,51 +140,43 @@ include '../../partials/Includes/header.php';
 </main>
 
 <script>
-function luminaPro() {
+function luminaCore() {
     return {
         isLoaded: false,
-        isFullScreen: false,
-        fileName: '',
-        truncatedName: '', // Nueva variable para el nombre corto
+        fullScreen: false,
+        shortName: '',
         currentBlobUrl: null,
-        viewerUrl: '../../assets/pdfjs/web/viewer.html', 
+        viewerPath: '/herramienta/assets/pdfjs/web/viewer.html', 
 
         handleFile(e) {
             const file = e.target.files[0];
-            if (file && file.type === 'application/pdf') {
-                this.injectPDF(file);
-            } else {
-                alert('Por favor selecciona un archivo PDF válido.');
-            }
-        },
+            if (!file || file.type !== 'application/pdf') return;
 
-        injectPDF(file) {
             if (this.currentBlobUrl) URL.revokeObjectURL(this.currentBlobUrl);
-            
-            this.fileName = file.name;
-            // Lógica de truncado: Si el nombre tiene más de 12 letras, corta y pone ...
-            this.truncatedName = this.fileName.length > 15 
-                ? this.fileName.substring(0, 12) + '...' 
-                : this.fileName;
 
-            this.isLoaded = true;
+            this.shortName = file.name;
             this.currentBlobUrl = URL.createObjectURL(file);
-            
+            this.isLoaded = true;
+
             this.$nextTick(() => {
-                /** * Ajuste para celular:
-                 * Se añade #zoom=page-width para que el visor se ajuste al ancho del celular automáticamente.
-                 */
-                const finalUrl = `${this.viewerUrl}?file=${encodeURIComponent(this.currentBlobUrl)}#zoom=page-width`;
+                // Forzamos el modo "Fit" para que se adapte a cualquier pantalla desde el inicio
+                const finalUrl = `${this.viewerPath}?file=${encodeURIComponent(this.currentBlobUrl)}#view=FitH`;
                 this.$refs.pdfIframe.src = finalUrl;
             });
+        },
+
+        toggleFS() {
+            this.fullScreen = !this.fullScreen;
+            // Bloquear scroll del cuerpo cuando está en pantalla completa
+            document.body.style.overflow = this.fullScreen ? 'hidden' : 'auto';
         },
 
         reset() {
             if (this.currentBlobUrl) URL.revokeObjectURL(this.currentBlobUrl);
             this.isLoaded = false;
-            this.isFullScreen = false;
-            this.fileName = '';
-            this.truncatedName = '';
+            this.fullScreen = false;
+            document.body.style.overflow = 'auto';
+            this.currentBlobUrl = null;
             this.$refs.pdfIframe.src = '';
             this.$refs.fileInput.value = '';
         }
