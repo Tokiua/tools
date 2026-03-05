@@ -76,7 +76,7 @@ body{
 <body class="antialiased text-slate-900" x-data="{ mobileMenu: false, ...nexosyneCore() }">
 
 <div id="splash">
-    <img src="../../assets/img/Gemini_Generated_Image_ko7frako7frako7f.png" class="logo-animate">
+    <img src="../../assets/img/carga.png" class="logo-animate">
     <h1 style="color:white;margin-top:25px;font-size:26px;font-weight:800;">Nexosyne Tools</h1>
     <p style="color:rgba(255,255,255,.85);margin-top:10px;font-size:15px;">Cargando herramienta...</p>
     <div class="loader-ring"></div>
