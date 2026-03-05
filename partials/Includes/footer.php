@@ -34,15 +34,16 @@
                 { id: 'tiktok', name: 'TikTok Downloader', icon: 'fab fa-tiktok', textCol: 'text-black', bgCol: 'bg-black' },
                 { id: 'lumina', name: 'Lumina Stream', icon: 'fas fa-file-pdf', textCol: 'text-purple-600', bgCol: 'bg-purple-600' },
                 { id: 'converter', name: 'Image Converter', icon: 'fas fa-sync-alt', textCol: 'text-emerald-500', bgCol: 'bg-emerald-500' },
-                { id: 'resizer', name: 'Image Optimizer', icon: 'fas fa-images', textCol: 'text-blue-600', bgCol: 'bg-blue-600' }
+                { id: 'resizer', name: 'Image Optimizer', icon: 'fas fa-images', textCol: 'text-blue-600', bgCol: 'bg-blue-600' },
+                { id: 'compress', name: 'Image Compress', icon: 'fas fa-file-image', textCol: 'text-emerald-600', bgCol: 'bg-emerald-600' }
             ],
             go(tool) {
-                // Rutas directas y limpias sin encriptación ni parámetros extra
                 const routes = {
                     tiktok: '../tiktok/index.php',
                     lumina: '../lector_doc/index.php',
                     converter: '../image-converter/index.php',
-                    resizer: '../image-resizer/index.php'
+                    resizer: '../image-resizer/index.php',
+                    compress: '../image-compress/index.php'
                 };
 
                 if(routes[tool]) {

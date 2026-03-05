@@ -180,7 +180,8 @@ if (typeof nexosyneCore !== 'function') {
                 { id: 'tiktok', name: 'TikTok Master', icon: 'fab fa-tiktok', bgCol: 'bg-black' },
                 { id: 'lector_doc', name: 'Lumina Stream', icon: 'fas fa-file-pdf', bgCol: 'bg-red-600' },
                 { id: 'image-converter', name: 'Image Converter', icon: 'fas fa-sync-alt', bgCol: 'bg-emerald-500' },
-                { id: 'image-resizer', name: 'Image Optimizer', icon: 'fas fa-compress-arrows-alt', bgCol: 'bg-purple-600' }
+                { id: 'image-resizer', name: 'Image Optimizer', icon: 'fas fa-compress-arrows-alt', bgCol: 'bg-purple-600' },
+                { id: 'image-compress', name: 'Image Compress', icon: 'fas fa-file-image', bgCol: 'bg-emerald-600' }
             ],
             go(id) {
                 window.location.href = `../../tools/${id}/index.php`;
@@ -189,11 +190,3 @@ if (typeof nexosyneCore !== 'function') {
     }
 }
 </script>
-
-<script>
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js');
-}
-</script>
-</body>
-</html>

@@ -117,7 +117,7 @@
         
         <section>
             <h2 class="section-title text-sm font-black uppercase tracking-[0.2em] text-slate-400">Descarga Multimedia</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <a href="tools/tiktok/index.php" class="card-unified group p-8 rounded-[2.5rem] flex flex-col cursor-pointer">
                     <div class="w-14 h-14 bg-black rounded-2xl flex items-center justify-center mb-6 group-hover:bg-purple-600 transition-colors text-white shadow-lg">
                         <i class="fab fa-tiktok text-xl"></i>
@@ -126,12 +126,12 @@
                     <p class="text-gray-500 leading-relaxed mb-6 flex-grow font-medium">Baja videos sin marca de agua al instante con la mejor calidad HD.</p>
                     <div class="flex items-center text-purple-600 font-black text-xs gap-2 uppercase">Ejecutar Herramienta <i class="fas fa-arrow-right ml-2"></i></div>
                 </a>
-                </div>
+            </div>
         </section>
 
         <section>
             <h2 class="section-title text-sm font-black uppercase tracking-[0.2em] text-slate-400">Gestión de Imágenes</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <a href="tools/image-converter/index.php" class="card-unified group p-8 rounded-[2.5rem] flex flex-col cursor-pointer">
                     <div class="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors text-white shadow-lg">
                         <i class="fas fa-sync-alt text-xl"></i>
@@ -148,6 +148,15 @@
                     <h3 class="text-2xl font-black mb-3 uppercase tracking-tighter">Image Optimizer</h3>
                     <p class="text-gray-500 leading-relaxed mb-6 flex-grow font-medium">Optimiza el peso y redimensiona imágenes sin sacrificar calidad.</p>
                     <div class="flex items-center text-purple-600 font-black text-xs gap-2 uppercase">Ejecutar Herramienta <i class="fas fa-arrow-right ml-2"></i></div>
+                </a>
+
+                <a href="tools/image-compress/index.php" class="card-unified group p-8 rounded-[2.5rem] flex flex-col cursor-pointer border-emerald-100 bg-emerald-50/10">
+                    <div class="w-14 h-14 bg-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-black transition-colors text-white shadow-lg">
+                        <i class="fas fa-file-image text-xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-black mb-3 uppercase tracking-tighter">Image Compress</h3>
+                    <p class="text-gray-500 leading-relaxed mb-6 flex-grow font-medium">Compresión avanzada local. Reduce el peso al máximo para web.</p>
+                    <div class="flex items-center text-emerald-600 font-black text-xs gap-2 uppercase">Comprimir Ahora <i class="fas fa-bolt ml-2"></i></div>
                 </a>
             </div>
         </section>
@@ -222,6 +231,7 @@
                     <a href="tools/lector_doc/index.php" class="font-bold text-sm hover:text-purple-400">Lumina Stream</a>
                     <a href="tools/image-converter/index.php" class="font-bold text-sm hover:text-purple-400">Image Converter</a>
                     <a href="tools/image-resizer/index.php" class="font-bold text-sm hover:text-purple-400">Image Optimizer</a>
+                    <a href="tools/image-compress/index.php" class="font-bold text-sm hover:text-emerald-400">Image Compress</a>
                 </div>
                 <div class="flex flex-col gap-4">
                     <span class="text-purple-600 font-black text-xs uppercase tracking-widest italic">Legal</span>
@@ -244,7 +254,8 @@
                     { name: 'TikTok Master', icon: 'fab fa-tiktok', color: 'bg-black', route: 'tools/tiktok/index.php' },
                     { name: 'Lumina Stream', icon: 'fas fa-file-pdf', color: 'bg-red-600', route: 'tools/lector_doc/index.php' },
                     { name: 'Image Converter', icon: 'fas fa-sync-alt', color: 'bg-emerald-500', route: 'tools/image-converter/index.php' },
-                    { name: 'Image Optimizer', icon: 'fas fa-compress-arrows-alt', color: 'bg-purple-600', route: 'tools/image-resizer/index.php' }
+                    { name: 'Image Optimizer', icon: 'fas fa-compress-arrows-alt', color: 'bg-purple-600', route: 'tools/image-resizer/index.php' },
+                    { name: 'Image Compress', icon: 'fas fa-file-image', color: 'bg-emerald-600', route: 'tools/image-compress/index.php' }
                 ]
             }
         }
