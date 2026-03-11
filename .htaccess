@@ -1,13 +1,9 @@
 <IfModule mod_mime.c>
-AddType application/javascript .js
-AddType text/javascript .js
-AddType application/javascript .mjs
-AddType text/javascript .mjs
-AddType application/wasm .wasm
-AddType text/css .css
-AddType application/json .json
+  AddType application/javascript .js
+  AddType application/javascript .mjs
+  AddType application/wasm .wasm
 </IfModule>
 
 <IfModule mod_headers.c>
-Header set X-Content-Type-Options "nosniff"
+  Header set X-Content-Type-Options "nosniff"
 </IfModule>
