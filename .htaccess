@@ -1,9 +1,17 @@
+# 1. Forzar tipos MIME para módulos modernos
 <IfModule mod_mime.c>
   AddType application/javascript .js
   AddType application/javascript .mjs
   AddType application/wasm .wasm
 </IfModule>
 
+# 2. Evitar que el navegador ignore los tipos anteriores
 <IfModule mod_headers.c>
-  Header set X-Content-Type-Options "nosniff"
+    Header set X-Content-Type-Options "nosniff"
 </IfModule>
+
+# 3. Permisos de acceso total a la carpeta de activos
+<FilesMatch "\.(mjs|js|wasm|css|pdf)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
