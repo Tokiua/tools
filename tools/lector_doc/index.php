@@ -4,18 +4,57 @@ $themeHex = "#ef4444";
 include '../../partials/Includes/header.php';
 ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.3.0/pdfobject.min.js"></script>
+
 <style>
     .viewer-wrapper {
-        position: relative; width: 100%; height: 75vh;
-        background: #1a1a1a; border-radius: 2rem;
-        overflow: hidden; border: 3px solid #000;
+        position: relative; 
+        width: 100%; 
+        height: 75vh;
+        background: #1a1a1a; 
+        border-radius: 2rem;
+        overflow: hidden; 
+        border: 3px solid #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
+    /* Estilo para el contenedor del PDF */
+    .pdfobject-container { 
+        width: 100%; 
+        height: 100%; 
+    }
+    
     .viewer-wrapper.is-fullscreen {
-        position: fixed !important; top: 0; left: 0;
-        width: 100vw !important; height: 100vh !important;
-        z-index: 9999; border-radius: 0;
+        position: fixed !important; 
+        top: 0; 
+        left: 0;
+        width: 100vw !important; 
+        height: 100vh !important;
+        z-index: 9999; 
+        border-radius: 0;
     }
-    iframe { width: 100%; height: 100%; border: none; display: block; }
+
+    /* Botón de cerrar pantalla completa mejorado */
+    .btn-exit-fs {
+        position: absolute; 
+        top: 80px; /* Bajado para no tapar herramientas del PDF */
+        right: 25px;
+        z-index: 10001; 
+        background: #ef4444;
+        color: white; 
+        width: 40px; 
+        height: 40px;
+        border-radius: 12px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        border: 2px solid #000; 
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        transition: transform 0.2s;
+    }
+    .btn-exit-fs:hover { transform: scale(1.1); }
 </style>
 
 <main class="max-w-5xl mx-auto px-4 py-10" x-data="luminaCore()">
@@ -23,15 +62,17 @@ include '../../partials/Includes/header.php';
         <h1 class="text-4xl font-black mb-2 text-black uppercase italic">
             Lumina <span class="text-theme">Stream</span>
         </h1>
-        <p class="text-gray-400 font-bold uppercase text-[9px] tracking-[0.3em]">Nexosyne 2026</p>
+        <p class="text-gray-400 font-bold uppercase text-[9px] tracking-[0.3em]">Memoria Volátil • Nexosyne 2026</p>
     </div>
 
-    <div class="card-unified p-4 md:p-6 shadow-2xl">
+    <div class="card-unified p-4 md:p-6 shadow-2xl" :class="fullScreen ? 'p-0 border-none' : ''">
+        
         <div x-show="!isLoaded" class="py-16 flex flex-col items-center justify-center">
             <div @click="$refs.fileInput.click()" 
-                 class="w-full max-w-md p-10 border-4 border-dashed border-gray-100 rounded-[3rem] cursor-pointer hover:border-theme bg-gray-50/50 transition-all text-center">
-                <i class="fas fa-file-pdf text-5xl text-gray-300 mb-6 transition-colors"></i>
-                <h3 class="text-xl font-black uppercase italic">Abrir Documento</h3>
+                 class="w-full max-w-md p-10 border-4 border-dashed border-gray-100 rounded-[3rem] cursor-pointer hover:border-theme bg-gray-50/50 text-center">
+                <i class="fas fa-file-pdf text-5xl text-gray-300 mb-6"></i>
+                <h3 class="text-xl font-black uppercase italic">Seleccionar PDF</h3>
+                <p class="text-[9px] font-bold text-gray-400 uppercase">Procesado localmente</p>
             </div>
         </div>
 
@@ -44,8 +85,11 @@ include '../../partials/Includes/header.php';
                 </div>
             </div>
 
-            <div class="viewer-wrapper" :class="fullScreen ? 'is-fullscreen' : ''">
-                <iframe x-ref="pdfIframe" src=""></iframe>
+            <div class="viewer-wrapper" id="pdf-viewer" :class="fullScreen ? 'is-fullscreen' : ''">
+                <button x-show="fullScreen" @click="toggleFS()" class="btn-exit-fs" title="Salir de pantalla completa">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div id="pdf-container" class="w-full h-full"></div>
             </div>
         </div>
     </div>
@@ -59,49 +103,41 @@ function luminaCore() {
         isLoaded: false,
         fullScreen: false,
         shortName: '',
-        currentBlobUrl: null,
-
-        // Detecta la ruta correcta según el entorno (Local vs Hostinger)
-        getViewerPath() {
-            const host = window.location.hostname;
-            // Si es localhost, incluye la carpeta del proyecto
-            if (host === 'localhost') {
-                return '/herramienta/assets/pdfjs/web/viewer.html';
-            }
-            // En Hostinger (asumiendo que tools.nexosyne.com apunta a public_html)
-            return '/assets/pdfjs/web/viewer.html';
-        },
+        pdfUrl: null,
 
         handleFile(e) {
             const file = e.target.files[0];
             if (!file || file.type !== 'application/pdf') return;
 
-            // Limpieza de memoria previa
-            if (this.currentBlobUrl) URL.revokeObjectURL(this.currentBlobUrl);
+            if (this.pdfUrl) URL.revokeObjectURL(this.pdfUrl);
             
             this.shortName = file.name;
-            // Creamos una URL temporal segura para el PDF
-            this.currentBlobUrl = URL.createObjectURL(file);
+            this.pdfUrl = URL.createObjectURL(file);
             this.isLoaded = true;
 
             this.$nextTick(() => {
-                const viewerPath = this.getViewerPath();
-                // Cargamos el visor pasando el Blob del PDF como parámetro 'file'
-                this.$refs.pdfIframe.src = `${viewerPath}?file=${encodeURIComponent(this.currentBlobUrl)}`;
+                // PDFObject incrusta el PDF de forma nativa
+                PDFObject.embed(this.pdfUrl, "#pdf-container", {
+                    pdfOpenParams: { view: 'FitV', toolbar: 1 }
+                });
             });
         },
 
         toggleFS() {
             this.fullScreen = !this.fullScreen;
             document.body.style.overflow = this.fullScreen ? 'hidden' : 'auto';
+            // Re-incrustar al cambiar tamaño para asegurar que se ajuste
+            this.$nextTick(() => {
+                PDFObject.embed(this.pdfUrl, "#pdf-container");
+            });
         },
 
         reset() {
-            if (this.currentBlobUrl) URL.revokeObjectURL(this.currentBlobUrl);
+            if (this.pdfUrl) URL.revokeObjectURL(this.pdfUrl);
             this.isLoaded = false;
             this.fullScreen = false;
             document.body.style.overflow = 'auto';
-            this.$refs.pdfIframe.src = '';
+            document.getElementById('pdf-container').innerHTML = '';
             this.$refs.fileInput.value = '';
         }
     }
