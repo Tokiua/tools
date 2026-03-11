@@ -4,63 +4,33 @@ $themeHex = "#ef4444";
 include '../../partials/Includes/header.php';
 ?>
 
-<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
 <style>
     :root { --theme: #ef4444; }
-    
-    .card-unified { 
-        background: #ffffff; 
-        border-radius: 2.5rem; 
-        border: 2px solid #f3f4f6; 
-        overflow: hidden;
-    }
-
+    .card-unified { background: #ffffff; border-radius: 2.5rem; border: 2px solid #f3f4f6; overflow: hidden; }
     .viewer-wrapper {
-        position: relative;
-        width: 100%;
-        height: 75vh;
-        background: #1a1a1a;
-        border-radius: 2rem;
-        overflow: hidden;
-        border: 3px solid #000;
+        position: relative; width: 100%; height: 75vh;
+        background: #1a1a1a; border-radius: 2rem;
+        overflow: hidden; border: 3px solid #000;
         transition: all 0.3s ease;
     }
-
-    /* Estilos para Modo Pantalla Completa */
     .viewer-wrapper.is-fullscreen {
-        position: fixed !important;
-        top: 0; left: 0;
-        width: 100vw !important;
-        height: 100vh !important;
-        z-index: 9999;
-        border-radius: 0;
-        border: none;
+        position: fixed !important; top: 0; left: 0;
+        width: 100vw !important; height: 100vh !important;
+        z-index: 9999; border-radius: 0; border: none;
     }
-
     iframe { width: 100%; height: 100%; border: none; display: block; }
-
-    /* Botón flotante para cerrar pantalla completa */
     .btn-exit-fs {
-        position: absolute;
-        top: 90px; /* Debajo de la barra de PDF.js */
-        right: 25px;
-        z-index: 10000;
-        background: var(--theme);
-        color: white;
-        width: 45px; height: 45px;
-        border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        border: 3px solid #000;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        position: absolute; top: 90px; right: 25px;
+        z-index: 10000; background: var(--theme);
+        color: white; width: 45px; height: 45px;
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        border: 3px solid #000; box-shadow: 0 10px 20px rgba(0,0,0,0.4);
         cursor: pointer;
     }
-
     [x-cloak] { display: none !important; }
 </style>
 
 <main class="max-w-5xl mx-auto px-4 py-10" x-data="luminaCore()">
-    
     <div class="text-center mb-10" x-show="!fullScreen">
         <h1 class="text-4xl md:text-6xl font-black mb-2 text-black uppercase italic">
             Lumina <span class="text-theme">Stream</span>
@@ -69,12 +39,10 @@ include '../../partials/Includes/header.php';
     </div>
 
     <div class="card-unified p-4 md:p-6 shadow-2xl" :class="fullScreen ? 'p-0 border-none' : ''">
-        
-        <div x-show="!isLoaded" class="py-16 flex flex-col items-center justify-center text-center">
-            <div @click="$refs.fileInput.click()" 
-                 class="w-full max-w-md p-10 border-4 border-dashed border-gray-100 rounded-[3rem] cursor-pointer hover:border-theme bg-gray-50/50 transition-all group">
+        <div x-show="!isLoaded" class="py-16 flex flex-col items-center justify-center">
+            <div @click="$refs.fileInput.click()" class="w-full max-w-md p-10 border-4 border-dashed border-gray-100 rounded-[3rem] cursor-pointer hover:border-theme bg-gray-50/50 transition-all group text-center">
                 <i class="fas fa-file-pdf text-5xl text-gray-300 group-hover:text-theme mb-6 transition-colors"></i>
-                <h3 class="text-xl font-black uppercase italic">Cargar Documento</h3>
+                <h3 class="text-xl font-black uppercase italic">Abrir Documento</h3>
                 <p class="text-gray-400 font-bold text-[10px] uppercase">Procesamiento Local Seguro</p>
             </div>
         </div>
@@ -83,50 +51,39 @@ include '../../partials/Includes/header.php';
             <div x-show="!fullScreen" class="flex justify-between items-center mb-4 bg-gray-50 p-3 rounded-2xl border border-gray-100">
                 <span class="font-black text-black text-[10px] uppercase italic truncate max-w-[200px]" x-text="shortName"></span>
                 <div class="flex gap-2">
-                    <button @click="toggleFS()" class="bg-black text-white px-4 py-2 rounded-xl font-black text-[9px] uppercase hover:bg-theme transition-colors">
-                        <i class="fas fa-expand mr-1"></i> Fullscreen
-                    </button>
-                    <button @click="reset()" class="bg-gray-200 text-black px-4 py-2 rounded-xl font-black text-[9px] uppercase hover:bg-red-500 hover:text-white transition-colors">
-                        <i class="fas fa-trash"></i>
-                    </button>
+                    <button @click="toggleFS()" class="bg-black text-white px-4 py-2 rounded-xl font-black text-[9px] uppercase hover:bg-theme transition-colors">PANTALLA COMPLETA</button>
+                    <button @click="reset()" class="bg-gray-200 text-black px-4 py-2 rounded-xl font-black text-[9px] uppercase hover:bg-red-500 hover:text-white transition-colors">BORRAR</button>
                 </div>
             </div>
 
             <div class="viewer-wrapper" :class="fullScreen ? 'is-fullscreen' : ''">
-                <button x-show="fullScreen" @click="toggleFS()" class="btn-exit-fs">
-                    <i class="fas fa-times"></i>
-                </button>
+                <button x-show="fullScreen" @click="toggleFS()" class="btn-exit-fs"><i class="fas fa-times"></i></button>
                 <iframe x-ref="pdfIframe" src=""></iframe>
             </div>
         </div>
     </div>
-
     <input type="file" x-ref="fileInput" @change="handleFile" class="hidden" accept=".pdf">
 </main>
 
 <script>
+// UNIFICAMOS nexosyneCore PARA EVITAR CONFLICTOS
 function luminaCore() {
+    // Combinamos las funcionalidades de navegación y del lector
     return {
+        ... (typeof nexosyneCore === 'function' ? nexosyneCore() : {}),
         isLoaded: false,
         fullScreen: false,
         shortName: '',
         currentBlobUrl: null,
 
-        /**
-         * LÓGICA DE RUTA INTELIGENTE:
-         * En XAMPP la ruta es /herramienta/assets/...
-         * En Hostinger la ruta es /assets/...
-         */
         getViewerPath() {
             const host = window.location.hostname;
             const path = window.location.pathname;
-
-            // Detecta si estamos en entorno local de XAMPP
-            if (host === 'localhost' || host === '127.0.0.1' || path.includes('/herramienta/')) {
+            // Estructura XAMPP local
+            if (host === 'localhost' || path.includes('/herramienta/')) {
                 return '/herramienta/assets/pdfjs/web/viewer.html';
             } 
-            
-            // En producción (Hostinger), la carpeta assets está en la raíz
+            // Estructura Hostinger raíz
             return '/assets/pdfjs/web/viewer.html';
         },
 
@@ -134,24 +91,20 @@ function luminaCore() {
             const file = e.target.files[0];
             if (!file || file.type !== 'application/pdf') return;
 
-            // Limpia memoria de blobs anteriores
             if (this.currentBlobUrl) URL.revokeObjectURL(this.currentBlobUrl);
-            
             this.shortName = file.name;
             this.currentBlobUrl = URL.createObjectURL(file);
             this.isLoaded = true;
 
             this.$nextTick(() => {
                 const path = this.getViewerPath();
-                // Cargamos el PDF dentro del visor de PDF.js usando el Blob URL
-                const finalUrl = `${path}?file=${encodeURIComponent(this.currentBlobUrl)}#view=FitH`;
-                this.$refs.pdfIframe.src = finalUrl;
+                // Forzamos la carga del iframe con el blob
+                this.$refs.pdfIframe.src = `${path}?file=${encodeURIComponent(this.currentBlobUrl)}#view=FitH`;
             });
         },
 
         toggleFS() {
             this.fullScreen = !this.fullScreen;
-            // Bloquea el scroll del sitio cuando está en pantalla completa
             document.body.style.overflow = this.fullScreen ? 'hidden' : 'auto';
         },
 
