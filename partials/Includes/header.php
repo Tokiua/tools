@@ -6,11 +6,16 @@ $themeHex = isset($themeHex) ? $themeHex : '#7c3aed';
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title><?php echo $pageTitle; ?> | Nexosyne Tools</title>
 
 <meta name="theme-color" content="<?php echo $themeHex; ?>">
-<link rel="manifest" href="/manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Nexosyne Tools">
+
+<link rel="manifest" href="../../manifest.php?color=<?php echo urlencode($themeHex); ?>">
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -18,6 +23,7 @@ $themeHex = isset($themeHex) ? $themeHex : '#7c3aed';
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <link rel="icon" href="../../assets/img/nexosyne.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="../../assets/img/192.png">
 
 <style>
 :root { --theme-color: <?php echo $themeHex; ?>; }
@@ -73,7 +79,7 @@ body{
 </style>
 </head>
 
-<body class="antialiased text-slate-900" x-data="{ mobileMenu: false, ...nexosyneCore() }">
+<body class="antialiased text-slate-900" x-data="{ mobileMenu: false, installPrompt: null, ...nexosyneCore() }" @beforeinstallprompt.window="installPrompt = $event; $event.preventDefault();">
 
 <div id="splash">
     <img src="../../assets/img/carga.png" class="logo-animate">
@@ -114,6 +120,12 @@ body{
         </div>
 
         <a href="../../index.php#nosotros" class="hover-text-theme transition text-black">Tecnología</a>
+        
+        <template x-if="installPrompt">
+            <button @click="installApp()" class="bg-black text-white px-4 py-2 rounded-xl text-[10px] font-black hover:bg-theme transition">
+                INSTALAR APP
+            </button>
+        </template>
     </div>
 
     <div class="md:hidden flex items-center">
@@ -136,6 +148,13 @@ body{
 
         <div class="flex-1 mobile-menu-scroll px-4 py-4">
             <div class="flex flex-col gap-2">
+                <template x-if="installPrompt">
+                    <button @click="installApp()" class="mb-4 p-4 font-black text-xs uppercase tracking-widest text-white bg-black rounded-2xl flex items-center justify-between">
+                        <span><i class="fas fa-download mr-3"></i> INSTALAR NEXOSYNE</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </template>
+
                 <a href="../../index.php" class="p-4 font-black text-xs uppercase tracking-widest text-slate-800 bg-gray-50 rounded-2xl flex items-center">
                     <i class="fas fa-home mr-3 text-theme"></i> INICIO
                 </a>
@@ -163,6 +182,15 @@ body{
 </div>
 
 <script>
+// Registro del Service Worker
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('../../sw.js')
+            .then(reg => console.log('Nexosyne Core: Service Worker Activo'))
+            .catch(err => console.log('Nexosyne Core: Error SW', err));
+    });
+}
+
 window.addEventListener("load",function(){
     setTimeout(()=>{
         const splash = document.getElementById("splash");
@@ -185,6 +213,15 @@ if (typeof nexosyneCore !== 'function') {
             ],
             go(id) {
                 window.location.href = `../../tools/${id}/index.php`;
+            },
+            async installApp() {
+                if (this.installPrompt) {
+                    this.installPrompt.prompt();
+                    const { outcome } = await this.installPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        this.installPrompt = null;
+                    }
+                }
             }
         }
     }
