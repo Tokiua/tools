@@ -1,9 +1,16 @@
+<?php
+$pageTitle = 'Suite Multimedia Profesional';
+$themeHex = '#7c3aed'; 
+$basePath = './'; // Ruta base para el index principal
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexosyne Tools | Suite Multimedia Profesional</title>
+    <title>Nexosyne Tools | <?php echo $pageTitle; ?></title>
+
+    <meta name="theme-color" content="<?php echo $themeHex; ?>">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
@@ -11,9 +18,21 @@
     <link rel="icon" type="image/png" href="assets/img/nexosyne.ico">
     
     <style>
+        :root { --theme-color: <?php echo $themeHex; ?>; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfc; scroll-behavior: smooth; overflow-x: hidden; }
-        .glass-nav { backdrop-filter: blur(12px); background: rgba(255, 255, 255, 0.95); border-bottom: 2px solid #7c3aed20; }
         
+        /* ESTILO DEL MENÚ (COPIADO) */
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, .95);
+            border-bottom: 2px solid rgba(0, 0, 0, .05);
+        }
+        .text-theme { color: var(--theme-color); }
+        .hover-text-theme:hover { color: var(--theme-color); }
+        .bg-theme { background-color: var(--theme-color); }
+        .nav-logo { background: transparent !important; mix-blend-mode: normal; }
+
+        /* ESTILOS DE CARDS Y SECCIONES */
         .card-unified { 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
             border: 2px solid #f3f4f6; 
@@ -24,87 +43,99 @@
         .card-unified:hover { 
             transform: translateY(-5px); 
             box-shadow: 0 25px 50px -12px rgba(124, 58, 237, 0.15); 
-            border-color: #7c3aed; 
+            border-color: <?php echo $themeHex; ?>; 
         }
 
-        .section-title {
-            position: relative;
-            display: inline-block;
-            padding-bottom: 8px;
-            margin-bottom: 32px;
-        }
+        .section-title { position: relative; display: inline-block; padding-bottom: 8px; margin-bottom: 32px; }
         .section-title::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 40px;
-            height: 4px;
-            background: #7c3aed;
-            border-radius: 2px;
+            content: ''; position: absolute; left: 0; bottom: 0; width: 40px; height: 4px;
+            background: <?php echo $themeHex; ?>; border-radius: 2px;
         }
 
-        .purple-gradient-text { background: linear-gradient(90deg, #000, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .purple-gradient-text { background: linear-gradient(90deg, #000, <?php echo $themeHex; ?>); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hero-logo img { height: 120px; width: auto; filter: drop-shadow(0 15px 25px rgba(124, 58, 237, 0.2)); }
         .footer-logo { filter: drop-shadow(2px 0 0 white) drop-shadow(-2px 0 0 white) drop-shadow(0 2px 0 white) drop-shadow(0 -2px 0 white); }
         [x-cloak] { display: none !important; }
-        
         .tech-badge { background: #f3f4f6; padding: 4px 12px; border-radius: 99px; font-size: 10px; font-weight: 800; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; }
+        .mobile-menu-scroll { max-height: calc(100vh - 100px); overflow-y: auto; }
     </style>
 </head>
-<body class="antialiased text-slate-900" x-data="nexosyneCore()">
+<body class="antialiased text-slate-900" x-data="{ mobileMenu: false, ...nexosyneCore('<?php echo $basePath; ?>') }">
 
-    <nav class="glass-nav sticky top-0 z-50 py-4 px-6 md:px-12 flex justify-between items-center">
+    <nav class="glass-nav sticky top-0 z-[100] py-4 px-6 md:px-12 flex justify-between items-center">
         <div class="flex items-center gap-3">
             <a href="index.php" class="flex items-center gap-3">
-                <img src="assets/img/Gemini_Generated_Image_ko7frako7frako7f.png" alt="Logo" class="h-10">
+                <img src="assets/img/logo.png" alt="Logo" class="h-10 nav-logo">
                 <span class="text-xl font-extrabold tracking-tighter text-black">
-                    Nexosyne<span class="text-purple-600">Tools</span>
+                    Nexosyne<span class="text-theme">Tools</span>
                 </span>
             </a>
         </div>
 
-        <div class="hidden md:flex gap-8 text-xs font-black uppercase tracking-widest text-gray-400 items-center">
-            <div class="relative" x-data="{ open: false }" @mouseleave="open = false">
-                <button @mouseover="open = true" class="flex items-center gap-2 hover:text-purple-600 transition py-2 text-black">
+        <div class="hidden md:flex gap-8 text-xs font-black uppercase tracking-widest text-gray-500 items-center">
+            <a href="index.php" class="hover-text-theme transition text-black uppercase">INICIO</a>
+
+            <div class="relative" x-data="{ dropdown: false }" @mouseleave="dropdown = false">
+                <button @mouseover="dropdown = true" class="flex items-center gap-2 text-black hover-text-theme transition py-2">
                     HERRAMIENTAS <i class="fas fa-chevron-down text-[10px]"></i>
                 </button>
-                <div x-show="open" x-cloak class="absolute left-0 mt-0 w-64 bg-white border-2 border-gray-100 shadow-2xl rounded-2xl overflow-hidden z-50">
+                <div x-show="dropdown" x-cloak class="absolute left-0 mt-0 w-64 bg-white border-2 border-gray-100 shadow-2xl rounded-2xl overflow-hidden">
                     <div class="p-2 flex flex-col">
-                        <template x-for="item in menuItems">
-                            <a :href="item.route" class="flex items-center gap-3 p-3 hover:bg-purple-50 rounded-xl transition group cursor-pointer">
-                                <div :class="`w-8 h-8 rounded-lg flex items-center justify-center text-white text-[10px] ${item.color}`">
+                        <template x-for="item in menuItems" :key="item.id">
+                            <a @click="go(item.id)" class="flex items-center gap-3 p-3 hover:bg-purple-50 rounded-xl transition group cursor-pointer">
+                                <div :class="`w-8 h-8 rounded-lg flex items-center justify-center text-white text-[10px] ${item.bgCol}`">
                                     <i :class="item.icon"></i>
                                 </div>
-                                <span class="text-slate-700 font-bold" x-text="item.name"></span>
+                                <span class="font-bold text-slate-700 text-[11px]" x-text="item.name"></span>
                             </a>
                         </template>
                     </div>
                 </div>
             </div>
-            <a href="#nosotros" class="hover:text-purple-600 transition text-black">Tecnología</a>
+
+            <a href="#nosotros" class="hover-text-theme transition text-black">Tecnología</a>
         </div>
 
-        <button class="md:hidden text-2xl" @click="mobileMenu = !mobileMenu">
-            <i class="fas" :class="mobileMenu ? 'fa-times' : 'fa-bars'"></i>
-        </button>
-
-        <div x-show="mobileMenu" x-cloak class="absolute top-full left-0 w-full bg-white border-b-2 border-gray-100 md:hidden flex flex-col p-6 shadow-xl z-[60]" x-transition>
-            <template x-for="item in menuItems">
-                <a :href="item.route" class="flex items-center gap-4 py-4 border-b border-gray-50 group cursor-pointer">
-                    <div :class="`w-10 h-10 rounded-xl flex items-center justify-center text-white ${item.color}`">
-                        <i :class="item.icon"></i>
-                    </div>
-                    <span class="font-bold text-slate-700 uppercase text-xs" x-text="item.name"></span>
-                </a>
-            </template>
+        <div class="md:hidden flex items-center">
+            <button @click="mobileMenu = true" class="text-black text-2xl w-10 h-10 flex items-center justify-center focus:outline-none">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </nav>
+
+    <div x-show="mobileMenu" x-cloak class="fixed inset-0 z-[110] md:hidden">
+        <div x-show="mobileMenu" x-transition:enter="transition-opacity duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" @click="mobileMenu = false" class="fixed inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div x-show="mobileMenu" x-transition:enter="transition transform duration-300" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" class="fixed inset-y-0 right-0 z-[111] w-full max-w-xs bg-white shadow-xl flex flex-col">
+            <div class="flex items-center justify-between px-6 py-6 border-b border-gray-100">
+                <span class="font-black text-lg tracking-tighter uppercase">Menú</span>
+                <button @click="mobileMenu = false" class="text-gray-500 text-2xl w-10 h-10 flex items-center justify-center"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="flex-1 mobile-menu-scroll px-4 py-4">
+                <div class="flex flex-col gap-2">
+                    <a href="index.php" class="p-4 font-black text-xs uppercase tracking-widest text-slate-800 bg-gray-50 rounded-2xl flex items-center">
+                        <i class="fas fa-home mr-3 text-theme"></i> INICIO
+                    </a>
+                    <div class="mt-6 px-4 font-black text-[10px] text-gray-400 uppercase tracking-[0.2em] mb-2 text-center">Nuestras Herramientas</div>
+                    <template x-for="item in menuItems" :key="item.id">
+                        <a @click="go(item.id); mobileMenu = false" class="flex items-center gap-4 p-4 hover:bg-gray-50 rounded-2xl transition group cursor-pointer">
+                            <div :class="`w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-sm ${item.bgCol}`">
+                                <i :class="item.icon + ' text-lg'"></i>
+                            </div>
+                            <span class="font-bold text-slate-700 uppercase text-xs" x-text="item.name"></span>
+                        </a>
+                    </template>
+                    <a href="#nosotros" @click="mobileMenu = false" class="mt-4 p-4 font-black text-xs uppercase tracking-widest text-slate-800 bg-gray-50 rounded-2xl flex items-center">
+                        <i class="fas fa-microchip mr-3 text-theme"></i> Tecnología
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <header class="pt-20 pb-12 px-6 text-center">
         <div class="max-w-4xl mx-auto">
             <div class="hero-logo mb-8 flex justify-center">
-                <img src="assets/img/Gemini_Generated_Image_ko7frako7frako7f.png" alt="Logo" class="animate-pulse">
+                <img src="assets/img/logo.png" alt="Logo" class="animate-pulse">
             </div>
             <h1 class="text-4xl md:text-7xl font-black leading-tight mb-6">
                 Procesamiento <br><span class="purple-gradient-text">Sin Almacenamiento.</span>
@@ -114,7 +145,6 @@
     </header>
 
     <main id="herramientas" class="max-w-7xl mx-auto px-6 pb-24 space-y-20">
-        
         <section>
             <h2 class="section-title text-sm font-black uppercase tracking-[0.2em] text-slate-400">Descarga Multimedia</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -202,16 +232,6 @@
                     <h4 class="font-black text-sm uppercase mb-2">Velocidad</h4>
                     <p class="text-gray-500 text-xs font-bold leading-relaxed">Optimizamos el procesamiento en tiempo real.</p>
                 </div>
-                <div class="p-6 border-2 border-gray-50 rounded-[2rem] bg-gray-50/30">
-                    <i class="fas fa-microchip text-blue-500 mb-4 text-xl"></i>
-                    <h4 class="font-black text-sm uppercase mb-2">Motor HD</h4>
-                    <p class="text-gray-500 text-xs font-bold leading-relaxed">Lumina Stream utiliza renderizado vectorial.</p>
-                </div>
-                <div class="p-6 border-2 border-gray-50 rounded-[2rem] bg-gray-50/30">
-                    <i class="fas fa-cloud-slash text-emerald-500 mb-4 text-xl"></i>
-                    <h4 class="font-black text-sm uppercase mb-2">No Cloud</h4>
-                    <p class="text-gray-500 text-xs font-bold leading-relaxed">Tus datos no se suben a nubes de terceros.</p>
-                </div>
             </div>
         </section>
     </main>
@@ -219,7 +239,7 @@
     <footer class="bg-black text-white pt-20 pb-10 px-6">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 mb-16">
             <div>
-                <img src="assets/img/Gemini_Generated_Image_ko7frako7frako7f.png" alt="Logo" class="h-12 mb-8 footer-logo">
+                <img src="assets/img/logo.png" alt="Logo" class="h-12 mb-8 footer-logo">
                 <p class="text-gray-400 font-bold text-sm leading-relaxed max-w-sm">
                     La suite multimedia profesional. Privacidad radical garantizada: Todo se toma, se trabaja y se entrega sin almacenar nada.
                 </p>
@@ -229,34 +249,30 @@
                     <span class="text-purple-600 font-black text-xs uppercase tracking-widest italic">Herramientas</span>
                     <a href="tools/tiktok/index.php" class="font-bold text-sm hover:text-purple-400">TikTok Master</a>
                     <a href="tools/lector_doc/index.php" class="font-bold text-sm hover:text-purple-400">Lumina Stream</a>
-                    <a href="tools/image-converter/index.php" class="font-bold text-sm hover:text-purple-400">Image Converter</a>
-                    <a href="tools/image-resizer/index.php" class="font-bold text-sm hover:text-purple-400">Image Optimizer</a>
-                    <a href="tools/image-compress/index.php" class="font-bold text-sm hover:text-emerald-400">Image Compress</a>
-                </div>
-                <div class="flex flex-col gap-4">
-                    <span class="text-purple-600 font-black text-xs uppercase tracking-widest italic">Legal</span>
-                    <a href="#" class="font-bold text-sm hover:text-purple-400">Privacidad</a>
-                    <a href="#" class="font-bold text-sm hover:text-purple-400">Términos</a>
                 </div>
             </div>
         </div>
-        <div class="max-w-7xl mx-auto pt-8 border-t border-gray-900 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-500 text-[10px] font-black uppercase tracking-[0.3em]">
+        <div class="max-w-7xl mx-auto pt-8 border-t border-gray-900 flex flex-row justify-between items-center gap-4 text-gray-500 text-[10px] font-black uppercase tracking-[0.3em]">
             <span>© 2026 Nexosyne Multimedia</span>
             <a href="https://tools.nexosyne.com" class="hover:text-white transition italic">tools.nexosyne.com</a>
         </div>
     </footer>
 
     <script>
-        function nexosyneCore() {
-            return {
-                mobileMenu: false,
-                menuItems: [
-                    { name: 'TikTok Master', icon: 'fab fa-tiktok', color: 'bg-black', route: 'tools/tiktok/index.php' },
-                    { name: 'Lumina Stream', icon: 'fas fa-file-pdf', color: 'bg-red-600', route: 'tools/lector_doc/index.php' },
-                    { name: 'Image Converter', icon: 'fas fa-sync-alt', color: 'bg-emerald-500', route: 'tools/image-converter/index.php' },
-                    { name: 'Image Optimizer', icon: 'fas fa-compress-arrows-alt', color: 'bg-purple-600', route: 'tools/image-resizer/index.php' },
-                    { name: 'Image Compress', icon: 'fas fa-file-image', color: 'bg-emerald-600', route: 'tools/image-compress/index.php' }
-                ]
+        if (typeof nexosyneCore !== 'function') {
+            window.nexosyneCore = function(base) {
+                return {
+                    menuItems: [
+                        { id: 'tiktok', name: 'TikTok Master', icon: 'fab fa-tiktok', bgCol: 'bg-black' },
+                        { id: 'lector_doc', name: 'Lumina Stream', icon: 'fas fa-file-pdf', bgCol: 'bg-red-600' },
+                        { id: 'image-converter', name: 'Image Converter', icon: 'fas fa-sync-alt', bgCol: 'bg-emerald-500' },
+                        { id: 'image-resizer', name: 'Image Optimizer', icon: 'fas fa-compress-arrows-alt', bgCol: 'bg-purple-600' },
+                        { id: 'image-compress', name: 'Image Compress', icon: 'fas fa-file-image', bgCol: 'bg-emerald-600' }
+                    ],
+                    go(id) {
+                        window.location.href = base + `tools/${id}/index.php`;
+                    }
+                }
             }
         }
     </script>

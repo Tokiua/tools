@@ -5,7 +5,7 @@ $color = isset($_GET['color']) ? $_GET['color'] : '#7c3aed';
 
 echo json_encode([
   "name" => "Nexosyne Tools",
-  "short_name" => "Nexosyne",
+  "short_name" => "Nexosyne Tools",
   "description" => "Suite completa de herramientas Nexosyne",
   "start_url" => "/", // Esto asegura que siempre inicie en el home del subdominio
   "scope" => "/",     // Esto permite que la PWA controle todo el sitio completo

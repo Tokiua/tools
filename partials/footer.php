@@ -1,7 +1,7 @@
 <footer class="bg-black text-white pt-20 pb-10 px-6 mt-20">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 mb-16">
             <div>
-                <img src="../../assets/img/Gemini_Generated_Image_ko7frako7frako7f.png" alt="Nexosyne" class="h-12 mb-8 footer-logo" style="filter: drop-shadow(2px 0 0 white) drop-shadow(-2px 0 0 white) drop-shadow(0 2px 0 white) drop-shadow(0 -2px 0 white);">
+                <img src="../../assets/img/logo.png" alt="Nexosyne" class="h-12 mb-8 footer-logo" style="filter: drop-shadow(2px 0 0 white) drop-shadow(-2px 0 0 white) drop-shadow(0 2px 0 white) drop-shadow(0 -2px 0 white);">
                 <p class="text-gray-400 font-bold text-sm leading-relaxed max-w-sm">
                     Herramientas de alto rendimiento. Privacidad total sin almacenamiento en servidor.
                 </p>
