@@ -16,7 +16,7 @@ $basePath = './'; // Ruta base para el index principal
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="manifest" href="manifest.php?color=<?php echo urlencode($themeHex); ?>">
     <link rel="apple-touch-icon" href="assets/img/192.png">
-
+ 
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
@@ -53,7 +53,7 @@ $basePath = './'; // Ruta base para el index principal
             background: var(--theme-color); border-radius: 2px;
         }
 
-        .purple-gradient-text { background: linear-gradient(90deg, #000, var(--theme-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .purple-gradient-text { background: linear-gradient(90deg, #ffffff, var(--theme-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hero-logo img { height: 120px; width: auto; filter: drop-shadow(0 15px 25px rgba(124, 58, 237, 0.2)); }
         [x-cloak] { display: none !important; }
         .tech-badge { background: #f3f4f6; padding: 4px 12px; border-radius: 99px; font-size: 10px; font-weight: 800; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; }
