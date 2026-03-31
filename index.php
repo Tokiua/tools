@@ -7,10 +7,16 @@ $basePath = './'; // Ruta base para el index principal
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Nexosyne Tools | <?php echo $pageTitle; ?></title>
 
     <meta name="theme-color" content="<?php echo $themeHex; ?>">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="manifest" href="manifest.php?color=<?php echo urlencode($themeHex); ?>">
+    <link rel="apple-touch-icon" href="assets/img/192.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
@@ -51,9 +57,39 @@ $basePath = './'; // Ruta base para el index principal
         .hero-logo img { height: 120px; width: auto; filter: drop-shadow(0 15px 25px rgba(124, 58, 237, 0.2)); }
         [x-cloak] { display: none !important; }
         .tech-badge { background: #f3f4f6; padding: 4px 12px; border-radius: 99px; font-size: 10px; font-weight: 800; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        /* SPLASH SCREEN ARMONIZADO (FONDO BLANCO) */
+        #splash {
+            position: fixed; inset: 0; background: #ffffff;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999; transition: opacity .6s ease;
+        }
+        .logo-animate {
+            width: 200px; height: 200px; object-fit: contain;
+            animation: floatLogo 3s ease-in-out infinite;
+        }
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+        .loader-ring {
+            margin-top: 30px; width: 45px; height: 45px;
+            border: 4px solid #f1f5f9; border-top: 4px solid var(--theme-color);
+            border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="antialiased text-slate-900" x-data="{ mobileMenu: false, ...nexosyneCore('<?php echo $basePath; ?>') }">
+
+    <div id="splash">
+        <img src="assets/img/carga.png" class="logo-animate" alt="Cargando">
+        <h1 style="color:#1a1a1a; margin-top:25px; font-size:26px; font-weight:800; letter-spacing:-0.025em;">
+            Nexosyne <span class="text-theme">Tools</span>
+        </h1>
+        <p style="color:#64748b; margin-top:10px; font-size:15px; font-weight:500;">Cargando herramienta...</p>
+        <div class="loader-ring"></div>
+    </div>
 
     <nav class="glass-nav sticky top-0 z-[100] py-4 px-6 md:px-12 flex justify-between items-center">
         <div class="flex items-center gap-3">
@@ -250,6 +286,25 @@ $basePath = './'; // Ruta base para el index principal
     </footer>
 
     <script>
+        // Manejo del Splash Screen
+        window.addEventListener("load", function() {
+            setTimeout(() => {
+                const splash = document.getElementById("splash");
+                if(splash) {
+                    splash.style.opacity = "0";
+                    setTimeout(() => { splash.remove(); }, 600);
+                }
+            }, 1200);
+        });
+
+        // Registro del Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .catch(err => console.log('SW registration failed'));
+            });
+        }
+
         function nexosyneCore(base) {
             return {
                 menuItems: [
