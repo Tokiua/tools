@@ -30,29 +30,32 @@ include '../../partials/Includes/header.php';
         border-bottom: 2px solid #f0f0f0; z-index: 20;
     }
 
-    /* VISOR CORREGIDO: Eliminamos flex para permitir scroll izquierdo total */
+    /* CONTENEDOR OPTIMIZADO */
     #viewer-canvas-container {
         flex-grow: 1; 
         overflow: auto; 
         background: #e5e7eb;
         cursor: grab; 
-        display: block; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         position: relative;
-        text-align: center;
-        padding: 150px; /* Padding equilibrado para margen de maniobra */
+        padding: 60px; /* Reducido para mejor vista en móvil */
+        scroll-behavior: smooth;
     }
     #viewer-canvas-container:active { cursor: grabbing; }
 
-    /* Hoja PDF: inline-block para respetar el text-align center */
+    /* WRAPPER DE PÁGINA: El secreto está en el padding dinámico */
     .pdf-page-wrapper {
-        display: inline-block;
-        margin-bottom: 40px; 
-        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        display: block;
+        margin: 20px auto; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         background: white; 
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        vertical-align: top;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         line-height: 0; 
         border: 1px solid #ddd;
+        position: relative;
+        flex-shrink: 0;
     }
 
     canvas { width: 100% !important; height: auto !important; display: block; }
@@ -71,6 +74,10 @@ include '../../partials/Includes/header.php';
         display: flex; justify-content: space-between; align-items: center;
         color: #9ca3af; font-size: 10px; font-weight: 800; letter-spacing: 0.1em;
     }
+
+    /* Fix para evitar saltos bruscos en móvil */
+    #viewer-canvas-container::-webkit-scrollbar { width: 6px; height: 6px; }
+    #viewer-canvas-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 </style>
 
 <main class="max-w-6xl mx-auto px-4 py-12" x-data="luminaViewerPro()">
@@ -85,14 +92,14 @@ include '../../partials/Includes/header.php';
 
     <div class="editor-wrapper shadow-2xl" :class="fullScreen ? 'is-fullscreen' : ''">
         <div class="pro-toolbar" x-show="isLoaded" x-transition>
-            <div class="flex gap-3 items-center">
-                <button @click="vRotate()" class="btn-tool"><i class="fas fa-sync-alt"></i></button>
+            <div class="flex gap-2 md:gap-3 items-center">
+                <button @click="vRotate()" class="btn-tool" title="Rotar"><i class="fas fa-sync-alt"></i></button>
                 <div class="h-6 w-[2px] bg-gray-100 mx-1"></div>
-                <button @click="vZoomStep(-0.2)" class="btn-tool"><i class="fas fa-minus"></i></button>
-                <div class="bg-gray-50 px-4 py-2 rounded-xl border border-gray-100">
-                    <span class="text-[11px] font-black text-black" x-text="Math.round(currentZoom * 100) + '%'"></span>
+                <button @click="vZoomStep(-0.1)" class="btn-tool"><i class="fas fa-minus"></i></button>
+                <div class="bg-gray-50 px-3 py-2 rounded-xl border border-gray-100 min-w-[55px] text-center">
+                    <span class="text-[10px] md:text-[11px] font-black text-black" x-text="Math.round(currentZoom * 100) + '%'"></span>
                 </div>
-                <button @click="vZoomStep(0.2)" class="btn-tool"><i class="fas fa-plus"></i></button>
+                <button @click="vZoomStep(0.1)" class="btn-tool"><i class="fas fa-plus"></i></button>
             </div>
             
             <div class="hidden lg:flex items-center gap-3">
@@ -100,7 +107,7 @@ include '../../partials/Includes/header.php';
                 <span class="text-[10px] text-black font-black uppercase italic tracking-tighter" x-text="fileName"></span>
             </div>
 
-            <div class="flex gap-3">
+            <div class="flex gap-2 md:gap-3">
                 <button @click="toggleFS()" class="btn-tool" :class="fullScreen ? 'active' : ''"><i class="fas fa-expand-arrows-alt"></i></button>
                 <button @click="reset()" class="btn-tool bg-black text-white hover:bg-red-600"><i class="fas fa-times"></i></button>
             </div>
@@ -148,27 +155,6 @@ include '../../partials/Includes/header.php';
         </div>
     </div>
 
-    <div class="mt-24 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        <div>
-            <h2 class="text-3xl font-black uppercase tracking-tighter text-black italic mb-6">Visualización <span class="text-theme">Ultra-Rápida</span></h2>
-            <p class="text-gray-500 font-bold text-sm leading-relaxed mb-4">
-                Lumina Stream procesa tus documentos PDF directamente en tu navegador. Olvídate de esperar a que los archivos se carguen en un servidor; aquí la privacidad es lo primero.
-            </p>
-            <div class="flex gap-4">
-                <div class="px-4 py-2 bg-gray-100 rounded-lg text-[10px] font-black uppercase">Sin Logs</div>
-                <div class="px-4 py-2 bg-gray-100 rounded-lg text-[10px] font-black uppercase">Fidelity 2.0</div>
-                <div class="px-4 py-2 bg-gray-100 rounded-lg text-[10px] font-black uppercase">Zero Storage</div>
-            </div>
-        </div>
-        <div class="bg-black p-8 rounded-[2.5rem] shadow-2xl border-b-4 border-red-600">
-            <div class="text-red-500 text-3xl mb-4"><i class="fas fa-shield-alt"></i></div>
-            <h3 class="text-white font-black uppercase italic text-xl mb-3">Privacidad Garantizada</h3>
-            <p class="text-gray-400 text-xs font-bold leading-relaxed">
-                Nuestra tecnología de renderizado no guarda ni un solo byte de tus documentos. Al cerrar la pestaña o presionar la "X", el contenido desaparece para siempre de la memoria volátil.
-            </p>
-        </div>
-    </div>
-
     <input type="file" x-ref="fileInput" @change="handleFile" class="hidden" accept=".pdf">
 </main>
 
@@ -178,13 +164,14 @@ function luminaViewerPro() {
         isLoaded: false,
         isProcessing: false,
         fullScreen: false,
-        currentZoom: 0.9,
+        currentZoom: 0.8,
         currentRotation: 0,
         fileName: '',
         totalPages: 0,
         isDragging: false,
         startX: 0, startY: 0,
         scrollLeft: 0, scrollTop: 0,
+        pageAspectRatios: [], // Guardamos el ratio original de cada hoja
 
         async handleFile(e) {
             const file = e.target.files[0];
@@ -199,13 +186,18 @@ function luminaViewerPro() {
                     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
                     const pdfDoc = await pdfjsLib.getDocument(new Uint8Array(f.target.result)).promise;
                     this.totalPages = pdfDoc.numPages;
+                    this.pageAspectRatios = [];
                     
                     const container = document.getElementById('viewer-canvas-container');
                     container.innerHTML = '';
 
                     for (let i = 1; i <= pdfDoc.numPages; i++) {
                         const page = await pdfDoc.getPage(i);
-                        const viewport = page.getViewport({ scale: 2.5 }); 
+                        const viewport = page.getViewport({ scale: 2.0 }); 
+                        
+                        // Guardar proporción para cálculos de rotación
+                        this.pageAspectRatios.push(viewport.height / viewport.width);
+
                         const wrapper = document.createElement('div');
                         wrapper.className = 'pdf-page-wrapper';
                         
@@ -221,11 +213,12 @@ function luminaViewerPro() {
                     this.isProcessing = false;
                     
                     this.$nextTick(() => {
-                        this.applyZoom();
+                        this.applyZoomAndLayout();
                         this.centerScroll();
                     });
                 } catch (err) {
-                    alert("Nexosyne Core: Error al procesar PDF");
+                    console.error(err);
+                    alert("Error crítico en el renderizado.");
                     this.reset();
                 }
             };
@@ -234,55 +227,73 @@ function luminaViewerPro() {
 
         centerScroll() {
             const container = document.getElementById('viewer-canvas-container');
-            // Centrado inteligente basado en el ancho real del contenido
-            const scrollX = (container.scrollWidth - container.clientWidth) / 2;
-            container.scrollLeft = scrollX;
-            container.scrollTop = 100; // Un pequeño margen superior
+            container.scrollLeft = (container.scrollWidth - container.clientWidth) / 2;
+            container.scrollTop = 0;
         },
 
         vZoomStep(val) {
-            this.currentZoom = Math.min(Math.max(this.currentZoom + val, 0.1), 4.0);
-            this.applyZoom();
-        },
-
-        applyZoom() {
-            const wrappers = document.querySelectorAll('.pdf-page-wrapper');
-            const baseWidth = 800; 
-            const newWidth = baseWidth * this.currentZoom;
-            
-            wrappers.forEach(w => {
-                w.style.width = newWidth + 'px';
-            });
+            this.currentZoom = Math.min(Math.max(this.currentZoom + val, 0.2), 3.0);
+            this.applyZoomAndLayout();
         },
 
         vRotate() {
             this.currentRotation = (this.currentRotation + 90) % 360;
+            this.applyZoomAndLayout();
+        },
+
+        applyZoomAndLayout() {
             const wrappers = document.querySelectorAll('.pdf-page-wrapper');
-            wrappers.forEach(w => {
+            const isHorizontal = (this.currentRotation % 180 !== 0);
+            
+            // Definimos un ancho base responsivo
+            const screenWidth = window.innerWidth;
+            const baseWidth = screenWidth < 768 ? 320 : 700;
+            const newWidth = baseWidth * this.currentZoom;
+
+            wrappers.forEach((w, index) => {
+                const ratio = this.pageAspectRatios[index];
+                const newHeight = newWidth * ratio;
+
+                // Aplicar tamaño al contenedor
+                w.style.width = newWidth + 'px';
+                w.style.height = newHeight + 'px';
                 w.style.transform = `rotate(${this.currentRotation}deg)`;
+
+                // CORRECCIÓN DE ESPACIADO (Margin dinámico)
+                // Si está rotado 90 o 270, el espacio vertical debe ser el ancho de la hoja
+                if (isHorizontal) {
+                    const diff = Math.abs(newWidth - newHeight) / 2;
+                    w.style.marginTop = (diff + 40) + 'px';
+                    w.style.marginBottom = (diff + 40) + 'px';
+                } else {
+                    w.style.marginTop = '20px';
+                    w.style.marginBottom = '40px';
+                }
             });
         },
 
+        // --- SISTEMA DE DRAG (Compatible móvil) ---
         startDragging(e) {
             if (e.target.closest('.pro-toolbar') || e.target.tagName === 'BUTTON') return;
             this.isDragging = true;
             const container = document.getElementById('viewer-canvas-container');
-            const x = (e.pageX || e.touches?.[0].pageX) - container.offsetLeft;
-            const y = (e.pageY || e.touches?.[0].pageY) - container.offsetTop;
+            const pageX = e.pageX || e.touches?.[0].pageX;
+            const pageY = e.pageY || e.touches?.[0].pageY;
             
-            this.startX = x;
-            this.startY = y;
+            this.startX = pageX - container.offsetLeft;
+            this.startY = pageY - container.offsetTop;
             this.scrollLeft = container.scrollLeft;
             this.scrollTop = container.scrollTop;
         },
 
         drag(e) {
             if (!this.isDragging) return;
-            e.preventDefault();
             const container = document.getElementById('viewer-canvas-container');
-            const x = (e.pageX || e.touches?.[0].pageX) - container.offsetLeft;
-            const y = (e.pageY || e.touches?.[0].pageY) - container.offsetTop;
+            const pageX = e.pageX || e.touches?.[0].pageX;
+            const pageY = e.pageY || e.touches?.[0].pageY;
 
+            const x = pageX - container.offsetLeft;
+            const y = pageY - container.offsetTop;
             const walkX = (x - this.startX);
             const walkY = (y - this.startY);
             
@@ -294,10 +305,7 @@ function luminaViewerPro() {
 
         toggleFS() {
             this.fullScreen = !this.fullScreen;
-            setTimeout(() => {
-                this.applyZoom();
-                this.centerScroll();
-            }, 200);
+            setTimeout(() => { this.applyZoomAndLayout(); }, 300);
         },
 
         reset() {
@@ -305,9 +313,8 @@ function luminaViewerPro() {
             this.isProcessing = false;
             this.fullScreen = false;
             this.fileName = '';
-            this.currentZoom = 0.9;
+            this.currentZoom = 0.8;
             this.currentRotation = 0;
-            if (this.$refs.fileInput) this.$refs.fileInput.value = ''; 
             const container = document.getElementById('viewer-canvas-container');
             if (container) container.innerHTML = '';
         }
