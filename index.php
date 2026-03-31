@@ -1,7 +1,7 @@
 <?php
 $pageTitle = 'Suite Multimedia Profesional';
 $themeHex = '#7c3aed'; 
-$basePath = './'; // Ruta base para el index principal
+$basePath = './'; 
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -14,9 +14,10 @@ $basePath = './'; // Ruta base para el index principal
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    
     <link rel="manifest" href="manifest.php?color=<?php echo urlencode($themeHex); ?>">
     <link rel="apple-touch-icon" href="assets/img/192.png">
- 
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
@@ -27,13 +28,11 @@ $basePath = './'; // Ruta base para el index principal
         :root { --theme-color: <?php echo $themeHex; ?>; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfc; scroll-behavior: smooth; overflow-x: hidden; }
         
-        /* NAVEGACIÓN */
         .glass-nav { backdrop-filter: blur(12px); background: rgba(255, 255, 255, .95); border-bottom: 2px solid rgba(0, 0, 0, .05); }
         .text-theme { color: var(--theme-color); }
         .hover-text-theme:hover { color: var(--theme-color); }
         .bg-theme { background-color: var(--theme-color); }
 
-        /* CARDS UNIFICADAS */
         .card-unified { 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
             border: 2px solid #f3f4f6; 
@@ -53,22 +52,23 @@ $basePath = './'; // Ruta base para el index principal
             background: var(--theme-color); border-radius: 2px;
         }
 
-        .purple-gradient-text { background: linear-gradient(90deg, #ffffff, var(--theme-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .purple-gradient-text { background: linear-gradient(90deg, #000, var(--theme-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hero-logo img { height: 120px; width: auto; filter: drop-shadow(0 15px 25px rgba(124, 58, 237, 0.2)); }
         [x-cloak] { display: none !important; }
         .tech-badge { background: #f3f4f6; padding: 4px 12px; border-radius: 99px; font-size: 10px; font-weight: 800; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; }
 
-        /* SPLASH SCREEN PROFESIONAL */
+        /* SPLASH SCREEN - FONDO BLANCO FORZADO */
         #splash {
-            position: fixed; inset: 0; background: #ffffff;
+            position: fixed; inset: 0; background: #ffffff !important;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             z-index: 9999; transition: opacity .8s ease;
         }
-        .logo-container { position: relative; display: flex; align-items: center; justify-content: center; }
+        .logo-container { position: relative; display: flex; align-items: center; justify-content: center; background: white !important; }
         .gear-animate { position: absolute; font-size: 240px; color: #f8fafc; animation: spinGear 12s linear infinite; }
         .logo-animate {
             width: 180px; height: 180px; object-fit: contain; position: relative; z-index: 10;
             animation: floatLogo 3s ease-in-out infinite;
+            background: transparent !important;
         }
         @keyframes spinGear { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes floatLogo {
@@ -80,6 +80,11 @@ $basePath = './'; // Ruta base para el index principal
             border: 3px solid #f1f5f9; border-top: 3px solid var(--theme-color);
             border-radius: 50%; animation: spinGear 1s linear infinite;
         }
+        
+        /* Ajuste para logo en footer */
+        .footer-logo {
+            filter: drop-shadow(2px 0 0 white) drop-shadow(-2px 0 0 white) drop-shadow(0 2px 0 white) drop-shadow(0 -2px 0 white);
+        }
     </style>
 </head>
 <body class="antialiased text-slate-900" x-data="{ mobileMenu: false, ...nexosyneCore('<?php echo $basePath; ?>') }">
@@ -88,18 +93,14 @@ $basePath = './'; // Ruta base para el index principal
         <div style="color: #94a3b8; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3em; margin-bottom: 25px;">
             Bienvenido a
         </div>
-        
         <div class="logo-container">
             <i class="fas fa-cog gear-animate"></i>
             <img src="assets/img/carga.png" class="logo-animate" alt="Cargando">
         </div>
-
         <h1 style="color:#1a1a1a; margin-top:30px; font-size:28px; font-weight:800; letter-spacing:-0.05em;">
             Nexosyne <span class="text-theme">Tools</span>
         </h1>
-        
         <div class="loader-ring"></div>
-
         <div style="max-width: 280px; text-align: center; margin-top: 45px; padding-top: 25px; border-top: 1px solid #f1f5f9;">
             <p id="daily-quote" style="color: #64748b; font-style: italic; font-size: 13px; line-height: 1.6; font-weight: 500;"></p>
         </div>
@@ -117,7 +118,6 @@ $basePath = './'; // Ruta base para el index principal
 
         <div class="hidden md:flex gap-8 text-xs font-black uppercase tracking-widest text-gray-500 items-center">
             <a href="index.php" class="hover-text-theme transition text-black">INICIO</a>
-
             <div class="relative" x-data="{ dropdown: false }" @mouseleave="dropdown = false">
                 <button @mouseover="dropdown = true" class="flex items-center gap-2 text-black hover-text-theme transition py-2">
                     HERRAMIENTAS <i class="fas fa-chevron-down text-[10px]"></i>
@@ -139,7 +139,6 @@ $basePath = './'; // Ruta base para el index principal
                     </div>
                 </div>
             </div>
-
             <a href="#nosotros" class="hover-text-theme transition text-black">Tecnología</a>
         </div>
 
@@ -154,12 +153,10 @@ $basePath = './'; // Ruta base para el index principal
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="translate-x-full"
          x-transition:enter-end="translate-x-0">
-        
         <div class="flex justify-between items-center mb-10">
             <span class="font-black text-xl tracking-tighter">NEXOSYNE <span class="text-theme">MENU</span></span>
             <button @click="mobileMenu = false" class="text-3xl">&times;</button>
         </div>
-
         <div class="flex flex-col gap-3 overflow-y-auto">
             <template x-for="item in menuItems">
                 <a @click="go(item.id)" class="flex items-center gap-4 p-5 rounded-2xl border-2 border-gray-50 bg-gray-50/50 font-extrabold uppercase text-xs shadow-sm cursor-pointer">
@@ -239,39 +236,46 @@ $basePath = './'; // Ruta base para el index principal
                 <span class="text-purple-600 font-black text-xs uppercase tracking-[0.3em] mb-4 block italic">Core Technology</span>
                 <h2 class="text-4xl font-black mb-6 leading-tight uppercase">¿Qué es Nexosyne Tools?</h2>
                 <p class="text-gray-500 font-medium leading-relaxed mb-8">
-                    Es un ecosistema de herramientas de alto rendimiento diseñadas bajo la filosofía <span class="text-black font-bold">Zero-Storage</span>. A diferencia de otros convertidores, nosotros no guardamos una copia de tus archivos en el servidor para procesarlos; utilizamos memoria RAM volátil para realizar la tarea y destruir el rastro al instante.
+                    Es un ecosistema de herramientas de alto rendimiento diseñadas bajo la filosofía <span class="text-black font-bold">Zero-Storage</span>. Todo se procesa en memoria volátil y se destruye al instante.
                 </p>
                 <div class="flex flex-wrap gap-3">
                     <span class="tech-badge">Tailwind CSS 3.4</span>
                     <span class="tech-badge">Alpine.js 3.x</span>
                     <span class="tech-badge">PHP 8.2</span>
-                    <span class="tech-badge">No-Storage Mode</span>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="p-6 border-2 border-gray-50 rounded-[2rem] bg-gray-50/30">
-                    <i class="fas fa-shield-halved text-purple-600 mb-4 text-xl"></i>
-                    <h4 class="font-black text-sm uppercase mb-2">Seguridad</h4>
-                    <p class="text-gray-500 text-xs font-bold leading-relaxed">Rutas directas y procesos efímeros por sesión.</p>
-                </div>
-                <div class="p-6 border-2 border-gray-50 rounded-[2rem] bg-gray-50/30">
-                    <i class="fas fa-bolt text-amber-500 mb-4 text-xl"></i>
-                    <h4 class="font-black text-sm uppercase mb-2">Velocidad</h4>
-                    <p class="text-gray-500 text-xs font-bold leading-relaxed">Optimizamos el procesamiento en tiempo real.</p>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="bg-black text-white pt-20 pb-10 px-6">
-        <div class="max-w-7xl mx-auto pt-8 border-t border-gray-900 flex flex-row justify-between items-center text-gray-500 text-[10px] font-black uppercase tracking-[0.3em]">
+    <footer class="bg-black text-white pt-20 pb-10 px-6 mt-20">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 mb-16">
+            <div>
+                <img src="assets/img/logo.png" alt="Nexosyne" class="h-12 mb-8 footer-logo">
+                <p class="text-gray-400 font-bold text-sm leading-relaxed max-w-sm">
+                    Herramientas de alto rendimiento. Privacidad total: Procesamiento en memoria volátil sin almacenamiento en servidor.
+                </p>
+            </div>
+            <div class="flex gap-16 md:justify-end">
+                <div class="flex flex-col gap-4">
+                    <span class="text-theme font-black text-xs uppercase tracking-widest italic">Herramientas</span>
+                    <template x-for="item in menuItems">
+                        <a @click="go(item.id)" class="font-bold text-sm hover:text-purple-400 transition cursor-pointer" x-text="item.name"></a>
+                    </template>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <span class="text-theme font-black text-xs uppercase tracking-widest italic">Navegación</span>
+                    <a href="index.php" class="font-bold text-sm hover:text-purple-400 transition">Inicio</a>
+                    <a href="index.php#nosotros" class="font-bold text-sm hover:text-purple-400 transition">Tecnología</a>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto pt-8 border-t border-gray-900 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-500 text-[10px] font-black uppercase tracking-[0.3em]">
             <span>© 2026 Nexosyne Multimedia</span>
-            <a href="#" class="hover:text-white transition italic">tools.nexosyne.com</a>
+            <a href="https://tools.nexosyne.com" class="hover:text-white transition italic">tools.nexosyne.com</a>
         </div>
     </footer>
 
     <script>
-        // Lógica de Splash y Moralejas
         const quotes = [
             "\"Privacidad radical: lo que subes, no se guarda.\"",
             "\"Tus archivos son procesados en memoria volátil.\"",
@@ -280,33 +284,28 @@ $basePath = './'; // Ruta base para el index principal
             "\"Herramientas rápidas para flujos de trabajo exigentes.\"",
             "\"Procesamos datos, no almacenamos identidades.\""
         ];
-
         document.getElementById('daily-quote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
 
-        // Manejo del Splash Screen con detección de actualizaciones
         window.addEventListener("load", function() {
-            // Service Worker e Instancia de Actualización
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('sw.js').then(reg => {
                     reg.onupdatefound = () => {
                         const installingWorker = reg.installing;
                         installingWorker.onstatechange = () => {
                             if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                // Aplica actualización de un solo
                                 window.location.reload();
                             }
                         };
                     };
                 });
             }
-
             setTimeout(() => {
                 const splash = document.getElementById("splash");
                 if(splash) {
                     splash.style.opacity = "0";
                     setTimeout(() => { splash.remove(); }, 800);
                 }
-            }, 3000); // 3 segundos para dar tiempo a la moraleja
+            }, 3000);
         });
 
         function nexosyneCore(base) {
