@@ -58,37 +58,51 @@ $basePath = './'; // Ruta base para el index principal
         [x-cloak] { display: none !important; }
         .tech-badge { background: #f3f4f6; padding: 4px 12px; border-radius: 99px; font-size: 10px; font-weight: 800; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; }
 
-        /* SPLASH SCREEN ARMONIZADO (FONDO BLANCO) */
+        /* SPLASH SCREEN PROFESIONAL */
         #splash {
             position: fixed; inset: 0; background: #ffffff;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 9999; transition: opacity .6s ease;
+            z-index: 9999; transition: opacity .8s ease;
         }
+        .logo-container { position: relative; display: flex; align-items: center; justify-content: center; }
+        .gear-animate { position: absolute; font-size: 240px; color: #f8fafc; animation: spinGear 12s linear infinite; }
         .logo-animate {
-            width: 200px; height: 200px; object-fit: contain;
+            width: 180px; height: 180px; object-fit: contain; position: relative; z-index: 10;
             animation: floatLogo 3s ease-in-out infinite;
         }
+        @keyframes spinGear { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes floatLogo {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-10px) scale(1.05); }
         }
         .loader-ring {
-            margin-top: 30px; width: 45px; height: 45px;
-            border: 4px solid #f1f5f9; border-top: 4px solid var(--theme-color);
-            border-radius: 50%; animation: spin 1s linear infinite;
+            margin-top: 20px; width: 40px; height: 40px;
+            border: 3px solid #f1f5f9; border-top: 3px solid var(--theme-color);
+            border-radius: 50%; animation: spinGear 1s linear infinite;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="antialiased text-slate-900" x-data="{ mobileMenu: false, ...nexosyneCore('<?php echo $basePath; ?>') }">
 
     <div id="splash">
-        <img src="assets/img/carga.png" class="logo-animate" alt="Cargando">
-        <h1 style="color:#1a1a1a; margin-top:25px; font-size:26px; font-weight:800; letter-spacing:-0.025em;">
+        <div style="color: #94a3b8; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3em; margin-bottom: 25px;">
+            Bienvenido a
+        </div>
+        
+        <div class="logo-container">
+            <i class="fas fa-cog gear-animate"></i>
+            <img src="assets/img/carga.png" class="logo-animate" alt="Cargando">
+        </div>
+
+        <h1 style="color:#1a1a1a; margin-top:30px; font-size:28px; font-weight:800; letter-spacing:-0.05em;">
             Nexosyne <span class="text-theme">Tools</span>
         </h1>
-        <p style="color:#64748b; margin-top:10px; font-size:15px; font-weight:500;">Cargando herramienta...</p>
+        
         <div class="loader-ring"></div>
+
+        <div style="max-width: 280px; text-align: center; margin-top: 45px; padding-top: 25px; border-top: 1px solid #f1f5f9;">
+            <p id="daily-quote" style="color: #64748b; font-style: italic; font-size: 13px; line-height: 1.6; font-weight: 500;"></p>
+        </div>
     </div>
 
     <nav class="glass-nav sticky top-0 z-[100] py-4 px-6 md:px-12 flex justify-between items-center">
@@ -220,20 +234,6 @@ $basePath = './'; // Ruta base para el index principal
             </div>
         </section>
 
-        <section>
-            <h2 class="section-title text-sm font-black uppercase tracking-[0.2em] text-slate-400">Documentos HD</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <a href="tools/lector_doc/index.php" class="card-unified group p-8 rounded-[2.5rem] flex flex-col">
-                    <div class="w-14 h-14 bg-red-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-black transition-colors text-white shadow-lg">
-                        <i class="fas fa-file-pdf text-xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-black mb-3 uppercase tracking-tighter">Lumina Stream</h3>
-                    <p class="text-gray-500 leading-relaxed mb-6 flex-grow font-medium">Visualizador PDF profesional con renderizado en tiempo real y volátil.</p>
-                    <div class="flex items-center text-red-600 font-black text-xs gap-2 uppercase">Abrir Documento <i class="fas fa-bolt ml-2"></i></div>
-                </a>
-            </div>
-        </section>
-
         <section id="nosotros" class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center border-t border-gray-100 pt-20">
             <div>
                 <span class="text-purple-600 font-black text-xs uppercase tracking-[0.3em] mb-4 block italic">Core Technology</span>
@@ -264,21 +264,6 @@ $basePath = './'; // Ruta base para el index principal
     </main>
 
     <footer class="bg-black text-white pt-20 pb-10 px-6">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 mb-16">
-            <div>
-                <img src="assets/img/logo.png" alt="Logo" class="h-12 mb-8 filter brightness-0 invert">
-                <p class="text-gray-400 font-bold text-sm leading-relaxed max-w-sm">
-                    La suite multimedia profesional. Privacidad radical garantizada: Todo se toma, se trabaja y se entrega sin almacenar nada.
-                </p>
-            </div>
-            <div class="flex gap-16 md:justify-end">
-                <div class="flex flex-col gap-4">
-                    <span class="text-purple-600 font-black text-xs uppercase tracking-widest italic">Herramientas</span>
-                    <a href="tools/tiktok/index.php" class="font-bold text-sm hover:text-purple-400 transition">TikTok Master</a>
-                    <a href="tools/lector_doc/index.php" class="font-bold text-sm hover:text-purple-400 transition">Lumina Stream</a>
-                </div>
-            </div>
-        </div>
         <div class="max-w-7xl mx-auto pt-8 border-t border-gray-900 flex flex-row justify-between items-center text-gray-500 text-[10px] font-black uppercase tracking-[0.3em]">
             <span>© 2026 Nexosyne Multimedia</span>
             <a href="#" class="hover:text-white transition italic">tools.nexosyne.com</a>
@@ -286,24 +271,43 @@ $basePath = './'; // Ruta base para el index principal
     </footer>
 
     <script>
-        // Manejo del Splash Screen
+        // Lógica de Splash y Moralejas
+        const quotes = [
+            "\"Privacidad radical: lo que subes, no se guarda.\"",
+            "\"Tus archivos son procesados en memoria volátil.\"",
+            "\"Calidad profesional en cada transformación.\"",
+            "\"Nexosyne Tools: Tu seguridad es nuestra prioridad.\"",
+            "\"Herramientas rápidas para flujos de trabajo exigentes.\"",
+            "\"Procesamos datos, no almacenamos identidades.\""
+        ];
+
+        document.getElementById('daily-quote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+
+        // Manejo del Splash Screen con detección de actualizaciones
         window.addEventListener("load", function() {
+            // Service Worker e Instancia de Actualización
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js').then(reg => {
+                    reg.onupdatefound = () => {
+                        const installingWorker = reg.installing;
+                        installingWorker.onstatechange = () => {
+                            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // Aplica actualización de un solo
+                                window.location.reload();
+                            }
+                        };
+                    };
+                });
+            }
+
             setTimeout(() => {
                 const splash = document.getElementById("splash");
                 if(splash) {
                     splash.style.opacity = "0";
-                    setTimeout(() => { splash.remove(); }, 600);
+                    setTimeout(() => { splash.remove(); }, 800);
                 }
-            }, 1200);
+            }, 3000); // 3 segundos para dar tiempo a la moraleja
         });
-
-        // Registro del Service Worker para PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .catch(err => console.log('SW registration failed'));
-            });
-        }
 
         function nexosyneCore(base) {
             return {
