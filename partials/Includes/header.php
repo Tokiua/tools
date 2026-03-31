@@ -11,11 +11,17 @@ $basePath = $isSubtool ? '../../' : './';
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title><?php echo $pageTitle; ?> | Nexosyne Tools</title>
 
     <meta name="theme-color" content="<?php echo $themeHex; ?>">
+    <meta name="mobile-web-app-capable" content="yes">
     <link rel="manifest" href="<?php echo $basePath; ?>manifest.php?color=<?php echo urlencode($themeHex); ?>">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Nexosyne Tools">
+    <link rel="apple-touch-icon" href="<?php echo $basePath; ?>assets/img/192.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -54,12 +60,11 @@ $basePath = $isSubtool ? '../../' : './';
 
         .logo-animate {
             width: 200px; height: 200px; object-fit: contain;
-            background: transparent !important; /* Transparencia total */
+            background: transparent !important;
             border: none;
             animation: floatLogo 3s ease-in-out infinite;
         }
 
-        /* Logos en Nav y Menú */
         .nav-logo {
             background: transparent !important;
             mix-blend-mode: normal;
@@ -172,6 +177,7 @@ $basePath = $isSubtool ? '../../' : './';
 </div>
 
 <script>
+// Manejo del Splash Screen
 window.addEventListener("load",function(){
     setTimeout(()=>{
         const splash = document.getElementById("splash");
@@ -182,6 +188,7 @@ window.addEventListener("load",function(){
     },1200);
 });
 
+// Lógica Core de Nexosyne
 if (typeof nexosyneCore !== 'function') {
     window.nexosyneCore = function(base) {
         return {
@@ -197,5 +204,14 @@ if (typeof nexosyneCore !== 'function') {
             }
         }
     }
+}
+
+// REGISTRO DE SERVICE WORKER (Para que sea instalable como App)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        // Se registra el sw.js desde la raíz usando el basePath
+        navigator.serviceWorker.register('<?php echo $basePath; ?>sw.js')
+            .catch(err => console.log('Service Worker: Opcional para navegación'));
+    });
 }
 </script>
